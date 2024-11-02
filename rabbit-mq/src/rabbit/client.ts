@@ -2,6 +2,8 @@ import amqp from "amqplib";
 import config from "../config.js";
 import { v4 as uuidv4 } from "uuid";
 import { type ResponseMessage, type RequestMessage } from "./index.js";
+import { TOPICS } from "./utils.js";
+import { Topics } from "./types.js";
 
 class Client {
   static connection: amqp.Connection;
@@ -25,10 +27,10 @@ class Client {
 
     // assert the exchange
     // exchange is set to durable so that it can survive a server restart
-    // it will be direct exchange type
+    // it will be topic
     await client.consumeClientChannel.assertExchange(
       config.rabbitMq.rpc.exchange,
-      "direct",
+      "topic",
       {
         durable: true,
       }
@@ -45,17 +47,20 @@ class Client {
     return client;
   }
 
-  public async publish(msg: RequestMessage) {
+  public async publish(operation: Topics, msg: RequestMessage) {
     // publish a message to the rpc exchange
     const correlationId = uuidv4();
     this.publishClientChannel.publish(
       config.rabbitMq.rpc.exchange,
-      config.rabbitMq.rpc.routingKey,
+      operation,
       Buffer.from(JSON.stringify(msg)),
       {
         correlationId,
         replyTo: this.queue,
         contentType: "application/json",
+        headers: {
+          operation,
+        },
       }
     );
     return this.createMessageTimeoutPromise(correlationId);

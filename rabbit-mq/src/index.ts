@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/api/v1/publish", async (req, res) => {
   try {
     const client = await Rabbit.initClient();
-    const response = await client.publish(req.body);
+    const response = await client.publish("rpc.multiply", req.body);
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error);

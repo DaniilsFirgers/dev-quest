@@ -28,7 +28,7 @@ const config: Config = {
     rpc: {
       exchange: "rpc",
       queue: "rpc_queue",
-      routingKey: "rpc_key",
+      routingKey: "rpc",
       messageTimeout: 5000,
     },
   },

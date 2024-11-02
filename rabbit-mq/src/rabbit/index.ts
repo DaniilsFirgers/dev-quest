@@ -1,30 +1,14 @@
 import amqp from "amqplib";
 import config from "../config.js";
 import Client from "./client.js";
-
-enum ContentType {
-  JSON = "application/json",
-  TEXT = "text/plain",
-  XML = "application/xml",
-}
-
-enum Action {
-  MULTIPLY = "multiply",
-  ADD = "add",
-  SUBTRACT = "subtract",
-  DIVIDE = "divide",
-}
-
-type RequestMessage = {
-  action: Action;
-  num1: number;
-  num2: number;
-};
-
-type ResponseMessage = {
-  result: number | null;
-  error?: string;
-};
+import {
+  Action,
+  ContentType,
+  RequestMessage,
+  ResponseMessage,
+  Topics,
+} from "./types.js";
+import { TOPICS } from "./utils.js";
 
 class Rabbit {
   static isInitialized = false;
@@ -51,7 +35,7 @@ class Rabbit {
       // it will be direct exchange type
       await this.consumeServerChannel.assertExchange(
         config.rabbitMq.rpc.exchange,
-        "direct",
+        "topic",
         {
           durable: true,
         }
@@ -71,7 +55,7 @@ class Rabbit {
       this.consumeServerChannel.bindQueue(
         q.queue,
         config.rabbitMq.rpc.exchange,
-        config.rabbitMq.rpc.routingKey
+        `${config.rabbitMq.rpc.routingKey}.*` // we will be listening to all topics with the prefix rpc;
       );
 
       this.isInitialized = true;
@@ -100,17 +84,25 @@ class Rabbit {
       if (!msg) return;
       let result: ResponseMessage;
       const { contentType, correlationId, replyTo } = msg.properties;
-      switch (contentType) {
-        case ContentType.JSON:
-          const message = JSON.parse(msg.content.toString());
-          result = this.performOperation(message);
-          break;
-        default:
-          result = {
-            result: null,
-            error: `Unsupported content type: ${contentType}`,
-          };
-          break;
+      const routingKeyOperation = msg.fields.routingKey as Topics;
+      if (!TOPICS[routingKeyOperation]) {
+        result = {
+          result: null,
+          error: `Unsupported operation: ${routingKeyOperation}`,
+        };
+      } else {
+        switch (contentType) {
+          case ContentType.JSON:
+            const message: RequestMessage = JSON.parse(msg.content.toString());
+            result = TOPICS[routingKeyOperation](message);
+            break;
+          default:
+            result = {
+              result: null,
+              error: `Unsupported content type: ${contentType}`,
+            };
+            break;
+        }
       }
       // send the result back to the client
       this.publishServerChannel.sendToQueue(
@@ -122,27 +114,6 @@ class Rabbit {
         }
       );
     });
-  }
-
-  private static performOperation(message: RequestMessage): ResponseMessage {
-    let result: number;
-    switch (message.action) {
-      case Action.ADD:
-        result = message.num1 + message.num2;
-        break;
-      case Action.SUBTRACT:
-        result = message.num1 - message.num2;
-        break;
-      case Action.MULTIPLY:
-        result = message.num1 * message.num2;
-        break;
-      case Action.DIVIDE:
-        if (message.num2 == 0)
-          return { result: null, error: "Cannot divide by zero" };
-        result = message.num1 / message.num2;
-        break;
-    }
-    return { result };
   }
 }
 
