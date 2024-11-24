@@ -28,3 +28,7 @@
     POSTGRES_PASSWORD: your_password
     POSTGRES_DB: your_database
   ```
+
+- SQL commands
+
+  1.
