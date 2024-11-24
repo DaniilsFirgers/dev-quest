@@ -23,7 +23,8 @@
   To overwrite default username, password and database use the following environment variables in the docker-compose:
 
   ```
-    POSTGRES_USER: admin
-    POSTGRES_PASSWORD: supersecret
-    POSTGRES_DB: test
+  environment:
+    POSTGRES_USER: your_username
+    POSTGRES_PASSWORD: your_password
+    POSTGRES_DB: your_database
   ```
