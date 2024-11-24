@@ -14,8 +14,16 @@
   10. `\i command_file` - executes a command file like init.sql;
   11. `\du` - lists all database users;
 
-- Init scripts
+- Init scripts and Docker
 
-  Initialization scripts can be either .sql or .sh and will run only once, on the first start up of the container, once db was initialized they are ignored. They are stored inside docker-entrypoint-initdb.d.
+  Initialization scripts can be either .sql or .sh and will run only once on the first start up of the container. If db was initialized they are ignored. Stored inside docker-entrypoint-initdb.d.
 
-  It is possible to run multiple scripts in a succession if they are named - 01-some_stuff.sql ... 02-some-stuff.sql and so on.
+  It is possible to run multiple scripts in a succession if they are named - 01-some_stuff.sql ... 02-some_stuff.sql and so on.
+
+  To overwrite default username, password and database use the following environment variables in the docker-compose:
+
+  ```
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: supersecret
+    POSTGRES_DB: test
+  ```
