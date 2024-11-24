@@ -29,6 +29,12 @@
     POSTGRES_DB: your_database
   ```
 
-- SQL commands
+- SQL commands and stuff
+
+  Schema vs database
+
+  -
+
+  We also can create users with specific rights
 
   1.
