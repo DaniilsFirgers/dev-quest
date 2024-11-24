@@ -3,6 +3,6 @@
 ---
 
 - Postgres terminal commands
-  `psql -U username -d database_name` > where -U is username and -d is database;
-  `\dt` > outputs tables in a specific database
-  `\d table_name` > outputs info about table structure, types, indexes and relationships
+  1. `psql -U username -d database_name` - where -U is username and -d is database;
+  2. `\dt` - outputs tables in a specific database
+  3. `\d table_name` - outputs info about table structure, types, indexes and relationships
