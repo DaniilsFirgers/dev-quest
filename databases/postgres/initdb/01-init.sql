@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS flat_updates(
     PRIMARY KEY(flat_1_id, flat_2_id),
     FOREIGN KEY(flat_1_id) REFERENCES flats(flat_id) ON DELETE CASCADE, -- foreign key is a reference to another table
     FOREIGN KEY(flat_2_id) REFERENCES flats(flat_id) ON DELETE CASCADE -- ON DELETE CASCADE means that if a flat is deleted, all references to it will be deleted as well
-)
+);
 
 -- create indexes
 CREATE INDEX idx_filtered_flats ON flats(is_filtered);
