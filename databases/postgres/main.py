@@ -2,6 +2,11 @@
 
 import requests
 
+# 1. create indexes on start up
+# 2. create indexes while running
+# 3 Insert data
+# 4. Upsert Data
+
 
 def main():
     img_data = requests.get(
