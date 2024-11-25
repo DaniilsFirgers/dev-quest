@@ -1,6 +1,6 @@
 # Postgres and SQL general cheatsheet
 
-- Postgres terminal commands
+- ## **Postgres terminal commands**
 
   1. `psql -U username -d database_name` - where -U is username and -d is database;
   2. `\conninfo` - to get connection info like _You are connected to database "test" as user "admin" via socket in "/var/run/postgresql" at port "5432"_;
@@ -14,7 +14,7 @@
   10. `\i command_file` - executes a command file like init.sql;
   11. `\du` - lists all database users;
 
-- **Init scripts and Docker**
+- ## **Init scripts and Docker**
 
 ---
 
@@ -31,11 +31,11 @@ environment:
   POSTGRES_DB: your_database
 ```
 
-- **SQL commands and stuff**
+- ## **SQL commands and stuff**
 
 ---
 
-- **Schema vs database**
+- ## **Schema vs database**
 
 - **INDEX vs CONSTRAINT**
 
