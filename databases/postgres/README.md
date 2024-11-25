@@ -1,6 +1,6 @@
 # Postgres and SQL general cheatsheet
 
-- ## **Postgres terminal commands**
+- ## Postgres terminal commands
 
   1. `psql -U username -d database_name` - where -U is username and -d is database;
   2. `\conninfo` - to get connection info like _You are connected to database "test" as user "admin" via socket in "/var/run/postgresql" at port "5432"_;
@@ -14,7 +14,7 @@
   10. `\i command_file` - executes a command file like init.sql;
   11. `\du` - lists all database users;
 
-- ## **Init scripts and Docker**
+- ## Init scripts and Docker
 
 Initialization scripts can be either .sql or .sh and will run only once on the first start up of the container. If db was initialized they are ignored. Stored inside docker-entrypoint-initdb.d.
 
@@ -29,11 +29,11 @@ environment:
   POSTGRES_DB: your_database
 ```
 
-- ## **SQL commands and stuff**
+- ## SQL commands and stuff
 
-- ### **Schema vs database**
+- ### Schema vs database
 
-- ### **INDEX vs CONSTRAINT**
+- ### INDEX vs CONSTRAINT
 
   Index is created primarily for search optimisations, while constraint is used
   for data integrity (I in ACID), so that we add only data that adheres to our restrictions.
