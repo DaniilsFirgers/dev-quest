@@ -25,3 +25,14 @@ CREATE TABLE IF NOT EXISTS flat_updates(
     FOREIGN KEY(flat_1_id) REFERENCES flats(flat_id) ON DELETE CASCADE, -- foreign key is a reference to another table
     FOREIGN KEY(flat_2_id) REFERENCES flats(flat_id) ON DELETE CASCADE -- ON DELETE CASCADE means that if a flat is deleted, all references to it will be deleted as well
 )
+
+-- create indexes
+CREATE INDEX idx_filtered_flats ON flats(is_filtered);
+CREATE INDEX idx_district ON flats(district);
+-- create composite index
+CREATE INDEX idx_district_price ON flats(district, price);
+-- create constraints
+ALTER TABLE flats ADD CONSTRAINT chk_price CHECK (price > 0);
+ALTER TABLE flats ADD CONSTRAINT chk_area CHECK (area > 0);
+ALTER TABLE flats ADD CONSTRAINT chk_floor CHECK (floor <= floors_total);
+ALTER TABLE flats ADD CONSTRAINT chk_rooms CHECK (rooms > 0);
