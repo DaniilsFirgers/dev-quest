@@ -16,8 +16,6 @@
 
 - ## **Init scripts and Docker**
 
----
-
 Initialization scripts can be either .sql or .sh and will run only once on the first start up of the container. If db was initialized they are ignored. Stored inside docker-entrypoint-initdb.d.
 
 It is possible to run multiple scripts in a succession if they are named - 01-some_stuff.sql ... 02-some_stuff.sql and so on.
@@ -33,11 +31,9 @@ environment:
 
 - ## **SQL commands and stuff**
 
----
+- ### **Schema vs database**
 
-- ## **Schema vs database**
-
-- **INDEX vs CONSTRAINT**
+- ### **INDEX vs CONSTRAINT**
 
   Index is created primarily for search optimisations, while constraint is used
   for data integrity (I in ACID), so that we add only data that adheres to our restrictions.
