@@ -14,7 +14,14 @@ CREATE TABLE IF NOT EXISTS flats(
     updated_at TIMESTAMPTZ DEFAULT NOW(), -- TIMESTAMPTZ is a type for timestamps with time zone
     created_at TIMESTAMPTZ DEFAULT NOW(), -- also can use CURRENT_TIMESTAMP for default value
     picture BYTEA, -- BLOB is a type for binary large objects
-    is_filtered BOOLEAN DEFAULT FALSE -- BOOLEAN is a type for true/false values
+);
+
+-- create a table to store references to favourite flats
+CREATE TABLE IF NOT EXISTS favourite_flats(
+    user_id VARCHAR(255) NOT NULL,
+    flat_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY(user_id, flat_id),
+    FOREIGN KEY(flat_id) REFERENCES flats(flat_id) ON DELETE CASCADE -- ON DELETE CASCADE means that if a flat is deleted, all references to it will be deleted as well
 );
 
 -- create a link table to trace relationships between flat adds that were updated
