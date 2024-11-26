@@ -31,7 +31,7 @@ environment:
 
 ## SQL commands and stuff
 
-- ### Schema vs database
+- ### Schema vs view vs database
 
 - ### INDEX vs CONSTRAINT
 
