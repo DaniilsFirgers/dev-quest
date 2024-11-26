@@ -31,6 +31,31 @@ def main():
     all_flats = cursor.fetchall()
     print(f"Fetched {len(all_flats)} flats")
 
+    # SELECT with condition
+    cursor.execute("SELECT * FROM flats WHERE price < 100000;")
+    cheap_flats = cursor.fetchall()
+    print(f"Fetched with condition {len(cheap_flats)} flats")
+
+    # SELECT with condition, but it return 4 columns
+    cursor.execute(
+        "SELECT flat_id, price, area, rooms FROM flats WHERE rooms = 3;")
+    three_room_flats = cursor.fetchall()
+    print(f"Using WHERE:  {three_room_flats}")
+
+    # SELECT with condition, but return 4 columns sorted by price
+    cursor.execute(
+        "SELECT flat_id, price, area, rooms FROM flats WHERE rooms > 2 ORDER BY price DESC;")
+    three_room_flats_sorted = cursor.fetchall()
+    print(f"Ordered flats:  {three_room_flats_sorted}")
+
+    # SELECT with condition, but return 4 columns sorted by price and limit is 2 (TOP 2 by room)
+    cursor.execute(
+        "SELECT flat_id, price, area, rooms FROM flats WHERE rooms > 2 ORDER BY price DESC LIMIT 2;"
+    )
+    top_two_three_room_flats = cursor.fetchall()
+    print(f"Top two flats:  {top_two_three_room_flats}")
+
+    # Some queries with SQL module
     cursor.close()
 
 
