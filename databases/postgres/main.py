@@ -1,18 +1,37 @@
-# import psycopg
+# On ubuntu run 'sudo apt-get install libpq-dev python3-dev' to install needed dependencies
+import psycopg2
+from psycopg2 import sql
+from psycopg2.extensions import connection, cursor
 
-import requests
 
-# 1. create indexes on start up
-# 2. create indexes while running
 # 3 Insert data
 # 4. Upsert Data
+# 5 Delete Data
+# 6 dumps
+
+db_config = {
+    "dbname": "test",
+    "user": "admin",
+    "password": "supersecret",
+    "host": "localhost",
+    "port": 3333
+}
+
+
+def get_cursor():
+    conn: connection = psycopg2.connect(**db_config)
+    cursor = conn.cursor()
+    return cursor
 
 
 def main():
-    img_data = requests.get(
-        'https://i.ss.com/gallery/7/1278/319301/63860018.th2.jpg').content
-    with open('image_name.jpg', 'wb') as handler:
-        handler.write(img_data)
+    cursor = get_cursor()
+    #  SELECT all flats
+    cursor.execute("SELECT * FROM flats;")
+    all_flats = cursor.fetchall()
+    print(f"Fetched {len(all_flats)} flats")
+
+    cursor.close()
 
 
 main()
