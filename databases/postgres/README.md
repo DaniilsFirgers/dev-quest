@@ -33,6 +33,21 @@ environment:
 
 - ### Schema vs view vs database
 
+- ### Transactions
+
+  Is a sequence of one or more database operations (INSERT, UPDATE, DELETE) that are executed as a single unit. Transactions
+  ensure that the operations are either all successfully applied to the database or none at all -> ACID. Unless we call COMMIT, changes are
+  not visibel to other transactions. If you are not explicitly calling COMMIT then SQL treats each command as its own transaction and
+  automatically commits it. If something goes wrong, call rollback()! For critical transactions use BEGIN and COMMIT for them to suceed together.
+
+  ```
+  BEGIN;
+  INSERT INTO users (id, name, age) VALUES (1, 'Alice', 30);
+  UPDATE users SET age = 31 WHERE id = 1;
+  COMMIT;
+
+  ```
+
 - ### INDEX vs CONSTRAINT
 
   Index is created primarily for search optimisations, while constraint is used
