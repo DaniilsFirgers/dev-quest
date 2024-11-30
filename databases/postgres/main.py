@@ -25,6 +25,8 @@ def get_cursor():
 
 
 def main():
+
+    ############################# SELECT #############################
     cursor = get_cursor()
     #  SELECT all flats
     cursor.execute("SELECT * FROM flats;")
@@ -55,7 +57,27 @@ def main():
     top_two_three_room_flats = cursor.fetchall()
     print(f"Top two flats:  {top_two_three_room_flats}")
 
-    # Some queries with SQL module
+    ############################## INSERT #############################
+
+    # Before insertaion lets check if flat with id_12 exists, if so, delete it
+    cursor.execute("DELETE FROM flats WHERE flat_id = 'id_12';")
+
+    # Insert 1 query
+    insert_query = """
+    INSERT INTO flats (flat_id, district, street, rooms, floors_total, floor, price, area, short_description, updated_at, created_at, picture, is_filtered) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW(), NULL, %s);"""
+
+    data = ("id_12", "test-district", "test-street", 3, 5,
+            2, 100000, 70, "good flat", True)
+    cursor.execute(insert_query, data)
+    # as psycopg2 is not implementign autocommit we need to commit changes
+    cursor.connection.commit()
+
+    cursor.execute("SELECT * FROM flats WHERE flat_id = 'id_12';")
+    # ensure we have data
+    flat = cursor.fetchone()
+    print(f"Flat with id_12: {flat}")
+
     cursor.close()
 
 
