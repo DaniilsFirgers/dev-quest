@@ -10,7 +10,7 @@
 - use "w" to jump one word forward and "b" to jump one word backward;
 - use "j" to move cursor down one line and "k" to jump one line up;
 - use "G" to move to the end of the file and "gg" to move to the beginning of the file;
-- use "$" to move cursor to the end of teh line;
+- use "$" to move cursor to the end of the line and 0 to move to the start of the line;
 
 **Important!!**
 Use prefacing numbers and Vim will execute this command multiple times;
