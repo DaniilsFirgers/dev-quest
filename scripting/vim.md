@@ -16,3 +16,12 @@
 Use prefacing numbers and Vim will execute this command multiple times;
 
 - For example, move 5 words forward with **5w**, to move bakc 10 words use **10b**, to move down 2 lines use **2j** and to move 3 lines up use **3k**.
+
+## Editing mode in Vim (not in insert mode)
+
+- use **u** to undo an insert operation! To undo your last 'undo' hit Ctrl-r;
+- use **dw** to delete a word , **d0** to delete to the beginning of the line, **d$** to delete to the end of the line;
+- use global **dgg** to delete to the beginning of the file and **dG** to delete to the end of the file;
+- use **2dd** to delete two lines below the cursor;
+- use **/** to search for a certain word in the text; Then hit **n** tojump to the next occurence;
+- use **v** to copy one chacter at a time and **V** to highlight a whole line. Use **p** to paste it after the current line and **P** to paste it on the current line;
