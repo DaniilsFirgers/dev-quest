@@ -76,6 +76,21 @@ ip route
 
 Some of the references:
 
-- **wlp2s** is a signle wireless interface, while **ethX** is the Ethernet card and **lo** is loopback.
+- **wlpX** is a signle wireless interface, while **ethX** is the Ethernet card and **lo** is loopback, and **docker0** is the docker interface.
 - **proto dhcp** means that this route was configured via DCHP.
 - **link** means that this route is used for local communication
+
+This command will show all network interfaces along with their IP addresses and other network-related information.
+
+```
+ip -a
+```
+
+```
+2: wlp2s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 60:57:18:0b:dd:3a brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.104/24 brd 192.168.1.255 scope global dynamic noprefixroute wlp2s0
+       valid_lft 83387sec preferred_lft 83387sec
+    inet6 fe80::7b6b:1ac5:2e40:744d/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+```
