@@ -94,3 +94,26 @@ ip -a
     inet6 fe80::7b6b:1ac5:2e40:744d/64 scope link noprefixroute
        valid_lft forever preferred_lft forever
 ```
+
+### Adding new routes
+
+To add new routing rules on Linux we use **ip route add** command in the folloiwng manner:
+
+```
+sudo ip route add <destination_network> via <gateway> dev <interface> [metric <metric_value>]
+```
+
+**Explanation:**
+
+- `<destination_network>`: the destination IP network to which you want to route traffic.
+- `<gateway>`: the gateway (router) IP address through which the traffic should go.
+- `<interface>`: the netwrok interface to use for routing (e.g., `wlpX` fro Wi-Fi or `ethX` fro Ethernet)
+- `metric <metric_value>` (optional): the metric value to use for the route indicating preferred routes - lower priority means less frequently used.
+
+Example:
+
+```
+sudo ip route add 192.168.2.0/24 via 192.168.1.1 dev wlp2s0
+```
+
+IMPORTANT!! - by default routes added via `ip route` command will be lost after a reboot. To make them perisitent, you can add them to your system's configuration!
