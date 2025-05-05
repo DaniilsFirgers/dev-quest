@@ -15,8 +15,37 @@ Considering IoT and smart devices, IPV4 would be already depleted. Two solutions
 
 Network Adress Translation or NAT is a routing technique used in **LAN** (Local area network) to route traffic among devices on the same local network. By doing this, we have only one central point, which is router or switch (for one device) that has access to the internet, and all devices are assigned their unique local IP address.
 
-- Dynamic host configuration protocol or **DHCP** server is responsible for private IP's districbution to devices on the LAN by sending device IP, subnet mask and default gateway address.
+- Dynamic host configuration protocol or **DHCP** server is responsible for private IP's distribution to devices on the LAN by sending device IP, subnet mask and default gateway address.
 
-- The **subnet mask** tells which part of the IP address is the host and which is the network. It divides IP addresses into sub-networks for a better management and control over the traffic. For example, subnet mask 255.255.255.0 has /24 notation and can have 256 different IP addresses (2^8, where 8 is what is left for the network and is 8 bits), while /16 can have 65,534 and is designed for larger networks.
+- The IP address given by a router is leased, not given forever. Before the lease expires, the device will try to renew the lease, if lease is not renewed, the IP goes back into the pool. On Linux you can check it out via:
+
+```
+sudo cat /var/lib/dhcp/dhclient.leases
+```
+
+- The **subnet mask** tells which part of the IP address is the host and which is the network. It divides IP addresses into sub-networks for a better management and control over the traffic. For example, subnet mask 255.255.255.0 has /24 notation and can have 254 different IP addresses (2^8 - 2, where 8 is what is left for the network and is 8 bitsm while two for broadcast and network), while /16 can have 65,534 and is designed for larger networks.
 
 - Media Access Control or **MAC** address is a unique hardware identifier for a network interface card (NIC). It is layer 2 (data link) in OSI and used by WI-Fi or Ethernet networks. To be able to build an Ethernet frame we need a destination and source MAC addresses. In order for my PC to know the router MAC address the address resolution protocal is or ARP is used. It basically asks “Who has 192.168.1.1?”. After first destinaton MAC address discovery, it is typically cached on the machine that has requested it.
+
+- When a request is routed from the router to the ISP it both assigns a private port (56001) to a private IP (192.168.1.104) for this specific request and opens a public port (43022) on the router (85.254.32.100), and writes it down to the **NAT table**. Then the request source replies to 85.254.32.100:43022 and router looks up the NAT table and knows whom to rewrite the destination. Same logic applies to ISP.
+
+| Public IP     | Public Port | Private IP    | Private Port |
+| ------------- | ----------- | ------------- | ------------ |
+| 85.254.32.100 | 43022       | 192.168.1.104 | 56001        |
+
+- **0.0.0.0** means that server accepts connections on all available IPv4 network interfaces. Meaning, from localhost and from LAN IP 192.168.x.x.
+
+- Routing commands on Linux:
+
+The following command will show a routing table with numeric output
+
+```
+route -n
+```
+
+| Destination | Gateway       | Genmask       | Flags | Metric | Ref | Use | Iface   |
+| ----------- | ------------- | ------------- | ----- | ------ | --- | --- | ------- |
+| 0.0.0.0     | 192.168.1.254 | 0.0.0.0       | UG    | 600    | 0   | 0   | wlp2s0  |
+| 169.254.0.0 | 0.0.0.0       | 255.255.0.0   | U     | 1000   | 0   | 0   | wlp2s0  |
+| 172.17.0.0  | 0.0.0.0       | 255.255.0.0   | U     | 0      | 0   | 0   | docker0 |
+| 192.168.1.0 | 0.0.0.0       | 255.255.255.0 | U     | 600    | 0   | 0   | wlp2s0  |
