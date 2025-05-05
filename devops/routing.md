@@ -1,4 +1,4 @@
-# Routing in Linux
+# Routing
 
 **IPV4** addresses are limited to approximately 2^32 = 4,294,967,296 as IPV4 is 32 bit number, and some of the IP addresses are reserved:
 
@@ -35,7 +35,7 @@ sudo cat /var/lib/dhcp/dhclient.leases
 
 - **0.0.0.0** means that server accepts connections on all available IPv4 network interfaces. Meaning, from localhost and from LAN IP 192.168.x.x.
 
-## Routing
+## Routing commands
 
 The following command will show a routing table with numeric output
 
