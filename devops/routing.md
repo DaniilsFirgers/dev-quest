@@ -3,10 +3,15 @@
 **IPV4** addresses are limited to approximately 2^32 = 4,294,967,296 as IPV4 is 32 bit number, and some of the IP addresses are reserved:
 
 > 10.0.0.0/24 ( private, internal networks like LAN )
+>
 > 192.168.0.0/16 ( private, home networks like Routers )
+>
 > 169.254.0.0/16 ( link-local auto-config, which can gives devices on LAN ability to reach one anoter in case router is down, or it is not configured. PC to printer )
+>
 > 127.0.0.0/8 ( loopback address )
+>
 > 203.0.113.0/24 ( Documentation IP for educational purposes, which is not routable )
+>
 > 224.0.0.0/4 ( multicast like video streaming )
 
 Considering IoT and smart devices, IPV4 would be already depleted. Two solutions were came up with - IPV6 and NAT. **IPV6** has 2^128 ip addresses, which is a lot.
@@ -62,6 +67,9 @@ ip route
 ```
 
 > default via 192.168.1.254 dev wlp2s0 proto dhcp metric 600
+>
 > 169.254.0.0/16 dev wlp2s0 scope link metric 1000
+>
 > 172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown
+>
 > 192.168.1.0/24 dev wlp2s0 proto kernel scope link src 192.168.1.104 metric 600
