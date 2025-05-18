@@ -4,6 +4,14 @@
 
 1. `git add` stages changes by creating a **blob object** for the file, then stores the content in `.git/objects/` and updates the index (staging area) to include the file and its blob hash.
 
+```
+git add <path-to_file>
+
+git commit -m "commit message"
+
+git push (if upstream is set) or git push -u origin <branch_name> (if upstream is not set, -u sets it)
+```
+
 2. Can check the staged content with `git diff --cached`. Will see something like this:
 
 ```
@@ -14,6 +22,15 @@ index 2fd6b91..c54cd81 100644
 @@ -1 +1 @@
 -Init commit
 +Init commit 2
+```
+
+3. Local branch shouldl track a remote branch for push and pull to be working without explicit `origin <branch_name>`
+
+The **upstream** is basically a **remote branch** your local branch tracks.
+Can check it by running:
+
+```
+git status
 ```
 
 ## git log
