@@ -41,3 +41,24 @@ README.md
 
 2. `git log -p` will show **line by line changes** per commit (need to scroll to see them).
 3. `git log --stat` will combine both above.
+
+# .git/
+
+`.git/objects/` is the heart of the Git repository's database and it stores all the actual content and history of the project as **Git objects** like this:
+
+```
+.git/
+└── objects/
+    ├── 3b/
+    │   └── 18e13d8db22858f7e46e8f229c8fcd9a6e6f29
+    ├── e5/
+    │   └── 94af239ffdd37c30529f63ae...
+    ├── info/
+    └── pack/
+```
+
+`.git/HEAD` tells git which branch you are on now, which will say something like:
+
+```
+ref: refs/heads/master
+```
