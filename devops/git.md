@@ -2,9 +2,9 @@
 
 ## git add
 
-`git add` stages changes by creating a **blob object** for the file, then stores the content in `.git/objects/` and updates the index (staging area) to include the file and its blob hash.
+1. `git add` stages changes by creating a **blob object** for the file, then stores the content in `.git/objects/` and updates the index (staging area) to include the file and its blob hash.
 
-Can check the staged content with `git diff --cached`. Will see something like this:
+2. Can check the staged content with `git diff --cached`. Will see something like this:
 
 ```
 diff --git a/README.md b/README.md
