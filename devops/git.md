@@ -88,7 +88,7 @@ ref: refs/heads/master
 Git tags are used to mark a a realesed version (like a big feature or a milestone), which makes it easier to find that exact point in history later. A tag is a **fixed pointer to a specific commit** and does not move unlike a **branch**.
 
 1. `git tag <tag_name>` or an annotated tag with `git tag -a <tag_name> -m "Release version"`
-   **REMEMBER** - when you do `git checkout v1.0` to a tag or a commit you enter a detached HEAD mode where **HEAD points directly to a commit or a tag instead of a branch**. You can look around or test older versions. **BUT**, if you want to commit changes to detached HEAD, you need to create a new branch from it like this:
+   **REMEMBER** - when you do `git checkout v1.0` to a tag or a commit you enter a detached `HEAD` mode where **`HEAD` points directly to a commit or a tag instead of a branch**. You can look around or test older versions. **BUT**, if you want to commit changes to detached `HEAD`, you need to create a new branch from it like this:
 
 ```
 git checkout -b <new_branch_name> <start_point>
@@ -102,7 +102,30 @@ git push origin <tag_name>
 
 ## git reflog a.k.a LIFE SAVER :)
 
-TODO
+1. Recover a deleted branch
+
+   1. Run `git reflog` to see the **every movement of `HEAD` and branch references** in your local repository.
+
+   ```
+   d3adb33 HEAD@{0}: checkout: moving from feature to main
+   c0ffee1 HEAD@{1}: commit: Work on feature
+   beef456 HEAD@{2}: checkout: moving from develop to feature
+
+   ```
+
+   2. Identify the commit hash (`c0ffee1` for example) related to yout deleted branch.
+
+   3. Create a new branch at that commit:
+
+   ```
+   git checkout -b recovered-branch <commit-hash>
+   ```
+
+   4. Push the recovered branch back to the remote:
+
+   ```
+   git push -u origin recovered-branch
+   ```
 
 ## git branch
 
