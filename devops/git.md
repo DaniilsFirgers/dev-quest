@@ -73,7 +73,12 @@ Git tags are used to mark a a realesed version (like a big feature or a mileston
 - `git tag <tag_name>` or an annotated tag with `git tag -a <tag_name> -m "Release version"`
   **REMEMBER** - when you do `git checkout v1.0` to a tag or a commit you enter a detached HEAD mode where **HEAD points directly to a commit or a tag instead of a branch**. You can look around or test older versions. **BUT**, if you want to commit changes to detached HEAD, you need to create a new branch from it like this:
 
-`git checkout -b <new_branch_name> <start_point>`
+```
+git checkout -b <new_branch_name> <start_point>
+```
 
 **REMEMBER** - tags are not pushed to the remote by default, you need to run:
-`git push origin <tag_name>`
+
+```
+git push origin <tag_name>
+```
