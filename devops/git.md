@@ -83,6 +83,10 @@ git checkout -b <new_branch_name> <start_point>
 git push origin <tag_name>
 ```
 
+## git reflog a.k.a LIFE SAVER :)
+
+TODO
+
 ## git branch
 
 1. List all **local** branches (the currently checked out branch is marked with \*):
@@ -113,4 +117,15 @@ git branch -d <my_branch>
 
 ```
 git push origin --delete <remote_branch>
+```
+
+6. Rename the current branch (both locally and remotely):
+
+```
+git branch -m <new_name>
+
+git push origin --delete <old_branch_name>
+
+git push origin <new_name>
+
 ```
