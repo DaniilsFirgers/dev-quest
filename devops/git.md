@@ -42,7 +42,7 @@ README.md
 2. `git log -p` will show **line by line changes** per commit (need to scroll to see them).
 3. `git log --stat` will combine both above.
 
-# .git/
+## .git/
 
 `.git/objects/` is the heart of the Git repository's database and it stores all the actual content and history of the project as **Git objects** like this:
 
@@ -66,19 +66,51 @@ ref: refs/heads/master
 `git cat-file -p <object-hash>` shows the content of the object.
 `git cat-file -t <object-hash>` shows type of the object - commit/tree/blob.
 
-# git tag
+## git tag
 
 Git tags are used to mark a a realesed version (like a big feature or a milestone), which makes it easier to find that exact point in history later. A tag is a **fixed pointer to a specific commit** and does not move unlike a **branch**.
 
-- `git tag <tag_name>` or an annotated tag with `git tag -a <tag_name> -m "Release version"`
-  **REMEMBER** - when you do `git checkout v1.0` to a tag or a commit you enter a detached HEAD mode where **HEAD points directly to a commit or a tag instead of a branch**. You can look around or test older versions. **BUT**, if you want to commit changes to detached HEAD, you need to create a new branch from it like this:
+1. `git tag <tag_name>` or an annotated tag with `git tag -a <tag_name> -m "Release version"`
+   **REMEMBER** - when you do `git checkout v1.0` to a tag or a commit you enter a detached HEAD mode where **HEAD points directly to a commit or a tag instead of a branch**. You can look around or test older versions. **BUT**, if you want to commit changes to detached HEAD, you need to create a new branch from it like this:
 
 ```
 git checkout -b <new_branch_name> <start_point>
 ```
 
-**REMEMBER** - tags are not pushed to the remote by default, you need to run:
+2. **REMEMBER** - tags are not pushed to the remote by default, you need to run:
 
 ```
 git push origin <tag_name>
+```
+
+## git branch
+
+1. List all **local** branches (the currently checked out branch is marked with \*):
+
+```
+git branch
+```
+
+2. Create a new branch without checking out to it:
+
+```
+git branch <new_branch_name>
+```
+
+3. Create a new branch and checkout to it:
+
+```
+git checkout -b <new_branch_name>
+```
+
+4. Delete a branch **locally**:
+
+```
+git branch -d <my_branch>
+```
+
+5. Delete a **remote** branch:
+
+```
+git push origin --delete <remote_branch>
 ```
