@@ -62,3 +62,12 @@ README.md
 ```
 ref: refs/heads/master
 ```
+
+`git cat-file -p <object-hash>` shows the content of the object.
+`git cat-file -t <object-hash>` shows type of the object - commit/tree/blob.
+
+# git tag
+
+Git tags are used to mark a a realesed version (like a big feature or a milestone), which makes it easier to find that exact point in history later. A tag is a **fixed pointer to a specific commit** and does not move unlike a **branch**.
+
+`git tag <tag_name>` or an annotated tag with `git tag -a <tag_name> -m "Release version"`
