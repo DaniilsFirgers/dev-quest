@@ -30,6 +30,7 @@ Implements OAuth2 flow for Google login
 ```
 
 Can be used togeter with semantic releases! It will bump a version based on commit messages. then generate a `CHANGELOG.md` file and publish the release.
+`Commitlint` + `Husky` as a good option!
 
 ## Branching strategies
 
@@ -220,4 +221,48 @@ git push origin --delete <old_branch_name>
 
 git push origin <new_name>
 
+```
+
+## git merge vs git rebase
+
+1. Git rebase is git command that **moves or replays** a sequence of commits from one branch into another. It gives a linear commit history.
+
+   > “Take all the commits I made on my branch and pretend I started from somewhere else.”
+
+It is preferred when pushing a small amount of commits developed in a short period of time (hours or minutes). However, it applies only to **local** branch changes! Once the commit is pushed to a **remote** branch it **should not** be rebased!
+
+**Never** rebase **shared/public** branches that others are working on - it rewrites history and causes conflicts!
+
+Here is a typical flow:
+
+```
+git checkout feature/login
+
+git fetch origin
+
+git rebase origin/main
+
+--- resolve conflicts ---
+
+git push --force-with-lease ( use it instead of --force!!)
+```
+
+**Why use _--force-with-lease_** instead of _--force_?
+
+- When _--force_ is used it says:
+
+  > "I don’t care what’s on the remote — overwrite it with my version."
+
+  Which can **delete commits** made by others, **lose work** if local branch is outdated!
+
+- When _--force-with-lease_ is used:
+
+  > "Only force-push if no one else has pushed to this branch since I last pulled/fetched."
+
+  Which is a safer alternative to _--force_
+
+**To abort rebasing**:
+
+```
+git rebase abort
 ```
