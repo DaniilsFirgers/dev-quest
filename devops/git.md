@@ -1,5 +1,55 @@
 # GIT
 
+## Message conventions
+
+```
+<type>(optional scope): <short description up to 50 words>
+
+[optional body]
+
+[optional footer]
+```
+
+| Type       | Purpose                                       |
+| ---------- | --------------------------------------------- |
+| `feat`     | A new feature                                 |
+| `fix`      | A bug fix                                     |
+| `docs`     | Documentation only changes                    |
+| `style`    | Code style changes (formatting, etc.)         |
+| `refactor` | Code refactoring (no new features or fixes)   |
+| `perf`     | Performance improvements                      |
+| `test`     | Adding or updating tests                      |
+| `chore`    | Other changes (build system, CI config, etc.) |
+
+Example:
+
+```
+feat(auth): add Google login option
+
+Implements OAuth2 flow for Google login
+```
+
+Can be used togeter with semantic releases! It will bump a version based on commit messages. then generate a `CHANGELOG.md` file and publish the release.
+
+## Branching strategies
+
+1. **Git flow** is a structured workflow suited for projects with scheduled releases.
+
+Typically the following branches are used:
+
+- `main`: Production-ready code.
+- `develop`:Integration branch for features.
+- `feature/*`:Feature-specific branched off `develop`.
+- `release/*`:Pre-release branches branched off `develop`.
+
+Typical Flow:
+
+1. Create a `feature/xyz` branch from `develop`.
+2. Merge feature to `develop` when complete.
+3. When ready to release, create `release/x.y`.
+4. Merge `release/x.y` into `main` and `develop` after testing.
+5. Tag the release on `main`.
+
 ## git add
 
 1. `git add` stages changes by creating a **blob object** for the file, then stores the content in `.git/objects/` and updates the index (staging area) to include the file and its blob hash.
@@ -11,6 +61,8 @@ git commit -m "commit message"
 
 git push (if upstream is set) or git push -u origin <branch_name> (if upstream is not set, -u sets it)
 ```
+
+You can use `git commit -am "Your message"` to **automatically stage (add)** all **tracked** files that have been modified, so no need to run `git add`. But it works only for **exisiting** files that git knwos about!
 
 2. Can check the staged content with `git diff --cached`. Will see something like this:
 
@@ -24,7 +76,7 @@ index 2fd6b91..c54cd81 100644
 +Init commit 2
 ```
 
-3. Local branch shouldl track a remote branch for push and pull to be working without explicit `origin <branch_name>`
+3. Local branch should track a remote branch for push and pull to be working without explicit `origin <branch_name>`
 
 The **upstream** is basically a **remote branch** your local branch tracks.
 Can check it by running:
