@@ -319,14 +319,14 @@ Moves the **HEAD** and optionally modifies the **staging area** and **working di
 
 There are three levels of Reset:
 
-1. `git reset --soft <commit>`
+1. `git reset --soft <commit / HEAD~1>`
 
 - Use when you want to uncommit changes but keep them staged.
 
-2. `git reset --mixed <commit> or git reset`
+2. `git reset --mixed <commit / HEAD~1> or git reset`
 
 - Use to undo `git add` (changes will not be staged and commited).
 
-3. `git reset --hard <commit>`
+3. `git reset --hard <commit / HEAD~1>`
 
 - Discards changes completely
