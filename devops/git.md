@@ -312,3 +312,21 @@ When to use it?
 
 - Hotfix to production (fix made in another branch needs to be applied asap)
 - Selective feature migration
+
+# git reset
+
+Moves the **HEAD** and optionally modifies the **staging area** and **working directory**
+
+There are three levels of Reset:
+
+1. `git reset --soft <commit>`
+
+- Use when you want to uncommit changes but keep them staged.
+
+2. `git reset --mixed <commit> or git reset`
+
+- Use to undo `git add` (changes will not be staged and commited).
+
+3. `git reset --hard <commit>`
+
+- Discards changes completely
