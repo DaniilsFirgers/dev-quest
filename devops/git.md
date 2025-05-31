@@ -294,4 +294,21 @@ There are two types of merges:
 
 ## git cherry-pick
 
-Lets you select a specific commit from another branch that you want to aplly into a target branch, without merging the full branch.
+Lets you select a specific commit from another branch that you want to apply into a target branch, without merging the full branch.
+
+```
+git checkout <target_branch>
+
+git cherry-pick <target_commit_hash> or <hash1> <hash2>
+```
+
+After resolving **conflicts** run:
+
+```
+git cherry-pick continue
+```
+
+When to use it?
+
+- Hotfix to production (fix made in another branch needs to be applied asap)
+- Selective feature migration
