@@ -291,3 +291,7 @@ There are two types of merges:
       D --- E ---------(feature)
 
   ```
+
+## git cherry-pick
+
+Lets you select a specific commit from another branch that you want to aplly into a target branch, without merging the full branch.
