@@ -332,10 +332,7 @@ There are three levels of Reset:
 - Discards changes completely
 
 # git clean
-<<<<<<< Updated upstream
-=======
 
-mixed
 Removes **untracked files and directories** from your working directory.
 
 - It does **not touch tacked files**
@@ -347,4 +344,15 @@ To show what would be deleted use:
 ```
 git clean -n
 ```
->>>>>>> Stashed changes
+
+To remove untracked file:
+
+```
+git clean -f
+```
+
+To remove untracked files and directories:
+
+```
+git clean -fd
+```
