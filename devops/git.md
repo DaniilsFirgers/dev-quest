@@ -86,6 +86,8 @@ Can check it by running:
 git status
 ```
 
+## git pull
+
 ## git log
 
 `git log` shows what changes were made to the repository, by whom and when.
@@ -223,9 +225,9 @@ git push origin <new_name>
 
 ```
 
-## git merge vs git rebase
+## git rebase vs git merge
 
-1. Git rebase is git command that **moves or replays** a sequence of commits from one branch into another. It gives a linear commit history.
+1. **Git rebase** is git command that **moves or replays** a sequence of commits from one branch into another. It gives a linear commit history.
 
    > “Take all the commits I made on my branch and pretend I started from somewhere else.”
 
@@ -266,3 +268,26 @@ git push --force-with-lease ( use it instead of --force!!)
 ```
 git rebase abort
 ```
+
+2. **Git merge** is a git command that combines changes form one branch into another. It integrates the histories of two branches, creating a single unified branch.
+
+There are two types of merges:
+
+- **Fast forward**
+  Happens when the branch you want to merge is directly ahead of the current branch. So git just moves the current branhc pointer forward to the target's branch's commit (no divergent changes).
+
+  ```
+  A --- B --- C (feature)
+  ^
+  main
+  ```
+
+- **Non-fast forward**
+  Happens when branches have diverged, meaning that both have commits that the other does not have. Git creates a new merge commit that combines the changes from both branches.
+
+  ```
+  A --- B --- C -------- M (main)
+    \                 /
+      D --- E ---------(feature)
+
+  ```
