@@ -330,3 +330,5 @@ There are three levels of Reset:
 3. `git reset --hard <commit / HEAD~1>`
 
 - Discards changes completely
+
+# git clean
