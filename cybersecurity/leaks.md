@@ -31,7 +31,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   aquasec/trivy image --scanners secret trufflesecurity/secrets:latest
 ```
 
---- or with binary---
+--- or with binary ---
 
 ```
 trufflehog docker --image trufflesecurity/secrets --results=verified
