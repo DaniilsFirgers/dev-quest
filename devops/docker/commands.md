@@ -1,5 +1,45 @@
 ### Docker overview
 
+# Virtual machine vs Docker container
+
+- Conainters **share the host OS system**, while VM **runs its own OS**. Analogy - everyone is renting their own separate flat vs everyone sharing one house, but have their own rooms.
+
+# Image basics
+
+- You can **search** for an image with the command, where you will see stars and 'official' status:
+
+```
+docker search <image_name>
+```
+
+- To **list downloaded** images use:
+
+```
+docker image ls
+```
+
+- To see **docker image layers** use the following command (add --no-truc flag to the full commands):
+
+```
+docker image history <image_name>
+```
+
+- To **tag** (give an existing docker image a new name or label) the image use the following command:
+
+```
+docker tag SOURCE_IMAGE:TAG TARGET_IMAGE:TAG
+
+---or---
+
+docker tag ubuntu:22.04 myrepo/ubuntu:prod
+```
+
+- To see how much **disk space Docker is using**, run this command:
+
+```
+docker system df
+```
+
 # Metadata
 
 To inspect image metadata:
