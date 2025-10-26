@@ -54,8 +54,32 @@ You can also find out what command `Config.Cmd` is fired when you run the contai
 
 When you see an array of `Layers`, each layer represents an instruction from a Dockerfile (like `RUN`, `COPY` or `ADD`). Each layer is **read-only** and when you run a container Docker stacks all these layers and adds a **writable** layer on top.
 
-View layers with:
+**View layers** with:
 
 ```
 docker history <image_name>
 ```
+
+## Docker Compose
+
+- To **start** all the services defined in your `compose.yaml` file:
+
+```
+docker compose up (-d for detached)
+```
+
+- To **stop and remove** the running services:
+
+| Command                                | Description                                                                                                              |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `docker compose down`                  | Removes **containers** created by your `docker-compose.yaml`. **Does not** remove **named volumes** and **build images** |
+| `docker compose down -v`               | Removes containers, networks and **named volumes** declared in :volumes section                                          |
+| `docker compose down --rmi local`      | Removes containers, networks and **images built locally** by compose                                                     |
+| `docker compose down --remove-orphans` | Containers **not defined** in the current compose file but still attached to the same network/project                    |
+
+- To show the **status of all containers** defined in `docker-compose.yaml`
+
+| Command                        | Description                            |
+| ------------------------------ | -------------------------------------- |
+| `docker compose ps -a`         | Show **all** containers (even stopped) |
+| `docker compose ps --services` | Show only the service names            |
