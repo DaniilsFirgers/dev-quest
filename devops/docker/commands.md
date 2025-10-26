@@ -1,10 +1,10 @@
-### Docker overview
+# Docker overview
 
-# Virtual machine vs Docker container
+## Virtual machine vs Docker container
 
 - Conainters **share the host OS system**, while VM **runs its own OS**. Analogy - everyone is renting their own separate flat vs everyone sharing one house, but have their own rooms.
 
-# Image basics
+## Image basics
 
 - You can **search** for an image with the command, where you will see stars and 'official' status:
 
@@ -40,7 +40,7 @@ docker tag ubuntu:22.04 myrepo/ubuntu:prod
 docker system df
 ```
 
-# Metadata
+## Metadata
 
 To inspect image metadata:
 
