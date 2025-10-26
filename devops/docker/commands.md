@@ -50,9 +50,9 @@ docker image inspect <image_name>:<image_tag>
 
 In the respective `.json` file you can find the image digest, which is a **unique cryptographic** image identifier, which represents the exact Docker image. It guarantees that the image has not been tampered with and that deployments use the same version every time.
 
-You can also find out what command `Config.Cmd` is fired when you run the container, startup command `Entrypoint` before cmd, user `User` under which the container is running, ports `ExposedPorts` that container exposes, environmental variables `Env` baked into the image. Also, you can see layers `RootFS.Layers` that the image is comprised of.
+You can also find out what command `Config.Cmd` is fired **when you run the container**, **startup command** `Entrypoint` before cmd, user `User` under which the container is running, ports `ExposedPorts` that container exposes, **environmental variables** `Env` baked into the image. Also, you can see layers `RootFS.Layers` that the image is comprised of.
 
-When you see an array of `Layers`, each layer represents an instruction from a Dockerfile (like `RUN`, `COPY` or `ADD`). Each layer is **read-only** and when you run a container Docker stacks all these layers and adds a **writable** layer on top.
+When you see an array of `Layers`, **each layer represents an instruction** from a Dockerfile (like `RUN`, `COPY` or `ADD`). Each layer is **read-only** and when you run a container Docker stacks all these layers and adds a **writable** layer on top.
 
 **View layers** with:
 
@@ -83,3 +83,27 @@ docker compose up (-d for detached)
 | ------------------------------ | -------------------------------------- |
 | `docker compose ps -a`         | Show **all** containers (even stopped) |
 | `docker compose ps --services` | Show only the service names            |
+
+## Docker logs
+
+`docker logs` shows the **output (stdout and stderr)** that a container main process has written since it started.
+
+- Standard command:
+
+```
+docker logs [OPTIONS] <container_name_or_id>
+
+--- or ---
+
+docker logs my-nginx
+```
+
+- Useful options for `docker logs`:
+
+| Option                 | Meaning                                                                  | Example                                         |
+| ---------------------- | ------------------------------------------------------------------------ | ----------------------------------------------- |
+| `-f` or `--follow`     | Stream logs live                                                         | `docker logs -f my-nginx`                       |
+| `--tail <n>`           | Show only last _n_ lines                                                 | `docker logs --tail 50 my-nginx`                |
+| `-t` or `--timestamps` | Show timestamps with each line                                           | `docker logs -t my-nginx`                       |
+| `--since`              | Show logs since a certain time (like 3s, 5m, 10h or absolute timestamps) | `docker logs since 10m my-nginx`                |
+| `--until`              | Who logs up to a certain time (only use timestamps here)                 | `docker logs --until 2025-10-04T10:00 my-nginx` |
