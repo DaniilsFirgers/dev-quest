@@ -107,3 +107,16 @@ docker logs my-nginx
 | `-t` or `--timestamps` | Show timestamps with each line                                           | `docker logs -t my-nginx`                       |
 | `--since`              | Show logs since a certain time (like 3s, 5m, 10h or absolute timestamps) | `docker logs since 10m my-nginx`                |
 | `--until`              | Who logs up to a certain time (only use timestamps here)                 | `docker logs --until 2025-10-04T10:00 my-nginx` |
+
+- Can use `docker compose logs` with all of the above options to see logs from all service
+  from `docker-compose.yaml` file.
+
+- You can match logs with the following commands:
+
+  | Command                                                                        | Meaning                                                                                   |
+  | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+  | `docker logs myapp  \| grep "Started`                                          | Search for logs with "Started"                                                            |
+  | `docker logs myapp \| grep -i "warning"`                                       | Case insensitive search for logs with 'warning'                                           |
+  | `docker logs myapp \| grep --line-buffered "ERROR"`                            | `--line-buffered` makes sure `grep` output matches immediately rather than buffering them |
+  | `docker logs myapp \| grep "ERROR" > error_logs.json`                          | Write current logs that match ERROR once to the file                                      |
+  | `docker logs -f myapp \| grep --line-buffered "Error" \| tee error_logs.json ` | Show logs output on the screen and save to the file                                       |
