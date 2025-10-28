@@ -2,4 +2,6 @@
 
 // Cover yaml anchors and aliases
 
-## Entrypoint and command
+// Lifecycle hooks
+
+// Secrets

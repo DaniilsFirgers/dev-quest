@@ -1,0 +1,4 @@
+FROM ubuntu
+
+USER 1001:1001
+CMD ["bash"]
