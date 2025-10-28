@@ -120,3 +120,63 @@ docker logs my-nginx
   | `docker logs myapp \| grep --line-buffered "ERROR"`                            | `--line-buffered` makes sure `grep` output matches immediately rather than buffering them |
   | `docker logs myapp \| grep "ERROR" > error_logs.json`                          | Write current logs that match ERROR once to the file                                      |
   | `docker logs -f myapp \| grep --line-buffered "Error" \| tee error_logs.json ` | Show logs output on the screen and save to the file                                       |
+
+## Entrypoint and command
+
+| Directive      | Purpose                                                                    |
+| -------------- | -------------------------------------------------------------------------- |
+| **ENTRYPOINT** | Defines the **main executable** that always runs when the container starts |
+| **CMD**        | Defines the **default arguments** or fallback for the `ENTRYPOINT`         |
+
+1. **CMD only**
+
+```
+FROM ubuntu
+CMD ["echo", "Hello, world!"]
+```
+
+- When we build and run `docker run my-image`, Docker executes `echo Hello, world!`.
+- We can **replace** the CMD with `docker run my-image date`.
+
+2. **ENTRYPOINT + CMD Together**
+
+```
+FROM ubuntu
+
+ENTRYPOINT ["echo"]
+CMD ["Hello world"]
+```
+
+- If we run `docker run my-image` we get the same result as before.
+- But if we run `docker run my-image "Goodbye"`, then ENTRYPOINT stays, and 'Goodbye' is added - `echo Goodbye`.
+- So `ENTRYPOINT` is fixed, `CMD` provides defaults or arguments.
+
+3. Overriding
+
+**Override CMD**
+
+```
+docker run ubuntu echo "hi"
+```
+
+**Override ENTRYPOINT**
+
+```
+docker run --entrypoint /bin/bash ubuntu
+```
+
+Now `/bin/bash` runs instead of whatever ENTRYPOINT was set.
+
+- To see container from the inside you can run **bash sehll executable** (-it for interactive + terminal):
+
+```
+docker run -it --entrypoint /bin/bash my-image
+```
+
+- To **jump into a running container** using `bash` or `sh` fro lightweight images:
+
+```
+docker exec -it <container_name_or_id> /bin/bash
+```
+
+## Removing images, containers and volumes
