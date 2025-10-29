@@ -15,8 +15,18 @@ docker run -v $(pwd):/app myimage
 - As Linux file ownership works by numeric IDs, not names, thus inside the container Docker does not translate usernames, but will **use the same UIDs/GIDs** and use these files as its own!
 - Id you use UID 1000 inside the container, tehn it will match host UID 1000 and **you can edit the file freely** in the container!
 
-Define user in the Dockerfile:
+**Define user in the Dockerfile**:
 
 ```
 USER 1001:1001
 ```
+
+**Pass user run `run` command**:
+
+```
+docker run -it -u 0:0 -v $(pwd):/data usertest
+```
+
+# Volumes
+
+Test this: Do not not bind mount docker socket volume (security breach), it will allows to control host Docker deamon directly, meaning, give root access to host. While `--priviledged` allows to run docker inside docker, but without root socket access.

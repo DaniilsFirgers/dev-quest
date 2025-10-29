@@ -1,4 +1,4 @@
 FROM ubuntu
 
-USER 1001:1001
+USER 1000:1000
 CMD ["bash"]

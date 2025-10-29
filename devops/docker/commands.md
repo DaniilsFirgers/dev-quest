@@ -180,3 +180,21 @@ docker exec -it <container_name_or_id> /bin/bash
 ```
 
 ## Removing images, containers and volumes
+
+1. Remove stopped containers
+
+```
+docker container prune
+```
+
+2. Remove one specific stopped container
+
+```
+docker rm <container_name_or_id>
+```
+
+3. Stop a running container
+
+```
+docker stop <container_name_or_id>
+```
