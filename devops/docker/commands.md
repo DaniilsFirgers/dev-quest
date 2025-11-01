@@ -198,3 +198,25 @@ docker rm <container_name_or_id>
 ```
 docker stop <container_name_or_id>
 ```
+
+# Copying files
+
+`docker cp` copies files/folders from the **host** and a container (or from a stopped container). It does not require the container to be running to copy from it.
+
+**Syntax**:
+
+```
+docker cp [OPTIONS] SRC_PATH DEST_PATH
+```
+
+1. Host -> Container
+
+```
+docker cp ./my-file.txt mycontainer:app/my-file.txt
+```
+
+2. Container -> Host
+
+```
+docker cp mycontainer:app/my-file.txt ./my-file.txt
+```

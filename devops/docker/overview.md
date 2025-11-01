@@ -32,5 +32,3 @@ docker run -it -u 0:0 -v $(pwd):/data usertest
 - Mounting `/var/run/docker.sock` into the container is a big security breach and it basically giving the container the root access to the host. So, generally speaking, deamon will have an ability to perform actions that have consequences on the host. Also, **avoid** adding users to the `docker` group as it also gives them near root capabilities.
 
 # Volumes
-
-Test this: Do not not bind mount docker socket volume (security breach), it will allows to control
