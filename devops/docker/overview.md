@@ -27,6 +27,10 @@ USER 1001:1001
 docker run -it -u 0:0 -v $(pwd):/data usertest
 ```
 
+# `--privileged` and docker socket bind
+
+- Mounting `/var/run/docker.sock` into the container is a big security breach and it basically giving the container the root access to the host. So, generally speaking, deamon will have an ability to perform actions that have consequences on the host. Also, **avoid** adding users to the `docker` group as it also gives them near root capabilities.
+
 # Volumes
 
-Test this: Do not not bind mount docker socket volume (security breach), it will allows to control host Docker deamon directly, meaning, give root access to host. While `--priviledged` allows to run docker inside docker, but without root socket access.
+Test this: Do not not bind mount docker socket volume (security breach), it will allows to control
