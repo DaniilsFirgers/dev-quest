@@ -33,7 +33,7 @@ docker run -it -u 0:0 -v $(pwd):/data usertest
 
 # Volumes
 
-1. Use **named** volumes instead of **host path** mount for dynamic/persistent data:
+1. Use **named** volumes instead of **host path** mount for dynamic/persistent data
 
 _GOOD!_
 
@@ -70,7 +70,7 @@ services:
 
 - The data will be written to the image **writable layer** and removed when you stop the container.
 
-Compiling code:
+_Compiling code_:
 
 ```
 FROM ubuntu
@@ -82,7 +82,7 @@ RUN mkdir /tmp/build && cd /tmp/build && \
 
 ```
 
-Test runners:
+_Test runners_:
 
 ```
 services:
@@ -90,4 +90,51 @@ services:
     image: python:3.11
     command: >
       bash -c "pytest tests/ --junitxml=/tmp/results.xml && cat /tmp/results.xml"
+```
+
+3. Use volume **access modes** correctly
+
+- The default access mode for mount/bind volume is `:rw` or read-write, but if you only want to allow the container to read from the volume use `:r0` - read-only.
+
+```
+volumes:
+  - ./data:/app/data:ro
+```
+
+4. Better use docker-managed volumes (external: true) for **production** environments
+
+- Inits a temporary container and copies config from host to the volume **only if empty**.
+- Mounts `shared_config_example` as **read-only** and `depends_on` ensures initialization happens before the app starts.
+- `shared_config_example` in compose will **NOT** create the volume. Docker expects it to already exist in **the Docker daemon**! You have to initialize docker volume with `docker volume create shared_config`.
+
+```
+volumes:
+  shared_config_example:
+    external: true  # assumes volume already exists
+
+services:
+  init_config:
+    image: busybox
+    # Only runs once to populate the volume if empty
+    volumes:
+      - shared_config:/data
+      - ./default-config.yaml:/default-config.yaml:ro
+    entrypoint: sh -c '
+      # Only copy if the volume is empty
+      if [ -z "$(ls -A /data)" ]; then
+        cp /default-config.yaml /data/config.yaml
+      fi
+    '
+    # Remove the container after running
+    restart: "no"
+
+  app:
+    image: usertest
+    depends_on:
+      - init_config  # ensure volume is initialized first
+    volumes:
+      - shared_config_example:/app/config:ro  # read-only for safety
+    environment:
+      - CONFIG_PATH=/app/config/config.yaml
+    restart: always
 ```
