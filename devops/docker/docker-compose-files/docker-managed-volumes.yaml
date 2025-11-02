@@ -1,0 +1,24 @@
+volumes:
+  shared_config_example:
+    external: true # assumes volume already exists
+
+services:
+  init_config:
+    image: busybox
+    user: root # is needed to write to volume and is ok for init container
+    # Only runs once to populate the volume if empty
+    volumes:
+      - shared_config_example:/data
+      - ../configs/basic-config.yaml:/basic-config.yaml:ro
+    entrypoint: sh -c "cp -n /basic-config.yaml /data/config.yaml"
+    # Remove the container after running
+    restart: "no"
+
+  app:
+    image: usertest
+    command: tail -f /dev/null # keep container running
+    depends_on:
+      - init_config # ensure volume is initialized first
+    volumes:
+      - shared_config_example:/app/config:ro # read-only for safety
+    restart: always

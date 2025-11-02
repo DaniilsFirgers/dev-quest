@@ -1,0 +1,5 @@
+name: basic-config
+version: 1.0
+settings:
+  optionA: true
+  optionB: 42
