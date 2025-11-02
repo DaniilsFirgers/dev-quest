@@ -32,3 +32,62 @@ docker run -it -u 0:0 -v $(pwd):/data usertest
 - Mounting `/var/run/docker.sock` into the container is a big security breach and it basically giving the container the root access to the host. So, generally speaking, deamon will have an ability to perform actions that have consequences on the host. Also, **avoid** adding users to the `docker` group as it also gives them near root capabilities.
 
 # Volumes
+
+1. Use **named** volumes instead of **host path** mount for dynamic/persistent data:
+
+_GOOD!_
+
+```
+services:
+  db:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+```
+
+This way `db_data` is Docker managed volume and it comes with an improved security, portability, backup/restore (can call list, prune and inspect native commands)
+
+_BAD!_
+
+```
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+```
+
+**When host paths make sense?**
+
+- For **development**, when you need live code reloading (static data)!
+- For **logs** that you want to be visible on the host!
+
+2. Use `/tmp` inside the container file system for **short container** tasks or **during the image build**
+
+- The data will be written to the image **writable layer** and removed when you stop the container.
+
+Compiling code:
+
+```
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y build-essential
+RUN mkdir /tmp/build && cd /tmp/build && \
+    gcc /src/app.c -o /usr/local/bin/app && \
+    rm -rf /tmp/build
+
+```
+
+Test runners:
+
+```
+services:
+  tests:
+    image: python:3.11
+    command: >
+      bash -c "pytest tests/ --junitxml=/tmp/results.xml && cat /tmp/results.xml"
+```
