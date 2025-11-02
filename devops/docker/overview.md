@@ -106,6 +106,7 @@ volumes:
 - Inits a temporary container and copies config from host to the volume **only if empty**.
 - Mounts `shared_config_example` as **read-only** and `depends_on` ensures initialization happens before the app starts.
 - `shared_config_example` in compose will **NOT** create the volume. Docker expects it to already exist in **the Docker daemon**! You have to initialize docker volume with `docker volume create shared_config`.
+- IMPORTANT: changes done to **config.yaml** inside the Docker container will be reflected in the **named volume** , so carefully choose whether to use `shared_config_example:/app/config:ro` read-only flag.
 
 ```
 volumes:
@@ -137,4 +138,20 @@ services:
     environment:
       - CONFIG_PATH=/app/config/config.yaml
     restart: always
+```
+
+_Safely edit config in the volume_
+
+- If you want to change the config **in the named volume**, do it through a temproray container that mounts the volume as **writable**:
+
+```
+docker run --rm -it \
+  -v shared_config_example:/data \
+  busybox sh
+```
+
+then
+
+```
+vi /data/config.yaml
 ```

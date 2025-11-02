@@ -2,4 +2,5 @@ name: basic-config
 version: 1.0
 settings:
   optionA: true
-  optionB: 42
+  optionB: 44
+  optionC: "Sample configuration file for Docker managed volume example."

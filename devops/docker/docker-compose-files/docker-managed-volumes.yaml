@@ -20,5 +20,5 @@ services:
     depends_on:
       - init_config # ensure volume is initialized first
     volumes:
-      - shared_config_example:/app/config:ro # read-only for safety
+      - shared_config_example:/app/config:ro
     restart: always
