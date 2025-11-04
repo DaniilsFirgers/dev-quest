@@ -223,7 +223,7 @@ docker cp ./my-file.txt mycontainer:app/my-file.txt
 
 2. Container -> Host
 
-   -On the host, the extracted files are owned by the user who ran docker cp, not by the user inside the container.
+- On the host, the extracted files are owned by the user who ran docker cp, not by the user inside the container.
 
 ```
 docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH
