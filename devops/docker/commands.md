@@ -211,12 +211,24 @@ docker cp [OPTIONS] SRC_PATH DEST_PATH
 
 1. Host -> Container
 
+- File ownership inside the container will be matched by UID:GID of that from host. So if the file ownership on the host was `1000:1000`, then inside the container it will be `ubuntu`.
+
 ```
+docker cp [OPTIONS] SRC_PATH CONTAINER:DEST_PATH
+
+or
+
 docker cp ./my-file.txt mycontainer:app/my-file.txt
 ```
 
 2. Container -> Host
 
+   -On the host, the extracted files are owned by the user who ran docker cp, not by the user inside the container.
+
 ```
+docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH
+
+or
+
 docker cp mycontainer:app/my-file.txt ./my-file.txt
 ```
