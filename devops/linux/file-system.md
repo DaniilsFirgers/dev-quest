@@ -8,5 +8,3 @@
 | `ls-l`   | List files and directories in **long listing format**                     | `ls -l`  |
 | `ls -la` | List files and directories **together with hidden** + long listing format | `ls -la` |
 | `ls -ln` | List file and directories **with numeric IDs**                            |          |
-
-# Users
