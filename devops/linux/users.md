@@ -12,7 +12,9 @@
 - System deamons need account to run under, but they do not need to overlap with normal users.
 - Otherwise a normal user could interfere with system processes.
 
-To view users info use `cat /etc/passwd`:
+**Users and passwords**
+
+- To view users info use `cat /etc/passwd`:
 
 ```
 hplip:x:127:7:HPLIP system user,,,:/run/hplip:/bin/false
@@ -26,7 +28,16 @@ rabbitmq:x:133:143:RabbitMQ messaging server,,,:/var/lib/rabbitmq:/usr/sbin/nolo
 
 ```
 
-## Add user
+- To view users password hashes user `/etc/shadow`:
+
+```
+alice:$y$j9T$27PPJk/PhyhylBg5VGEYu.$viDBvtCzXlgFHL1Y.4S0qeuRCU3R73suhdZCHEkytv4:19425:0:99999:7:::
+mongodb:*:19427:0:99999:7:::
+sshd:*:19451:0:99999:7:::
+
+```
+
+## Add a user
 
 - To add user use the following command:
 
@@ -43,3 +54,11 @@ UID:    1001
 GID:    1001
 
 ```
+
+- You can **specify an existing group** for the user with `sudo adduser --ingroup developers alice`.
+
+## Delete a user
+
+- `sudo deluser alice` - will remove the entry from /etc/passwd, **but keep their home directory and files**.
+- `sudo deluser --remove-home alice` - will also remove user's home directory
+- `sudo deluser --remove-home --remove-all-files alice` - remove all user info
