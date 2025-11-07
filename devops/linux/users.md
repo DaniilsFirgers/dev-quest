@@ -28,7 +28,7 @@ rabbitmq:x:133:143:RabbitMQ messaging server,,,:/var/lib/rabbitmq:/usr/sbin/nolo
 
 ```
 
-- To view users password hashes user `/etc/shadow`:
+- To view users password hashes (can be disabled (\* or !) for system users) use `/etc/shadow` :
 
 ```
 alice:$y$j9T$27PPJk/PhyhylBg5VGEYu.$viDBvtCzXlgFHL1Y.4S0qeuRCU3R73suhdZCHEkytv4:19425:0:99999:7:::
