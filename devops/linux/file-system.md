@@ -1,15 +1,19 @@
 # Linux file system commands
 
-| Command  | Description                                                               | Example  |
-| -------- | ------------------------------------------------------------------------- | -------- |
-| `pwd`    | Print current working directory                                           | `pwd`    |
-| `ls`     | List files                                                                | `ls`     |
-| `ls -a`  | List all files (hidden as well .)                                         | `ls -a`  |
-| `ls-l`   | List files and directories in **long listing format**                     | `ls -l`  |
-| `ls -la` | List files and directories **together with hidden** + long listing format | `ls -la` |
-| `ls -ln` | List file and directories **with numeric IDs**                            |          |
+| Command   | Description                                                               |
+| --------- | ------------------------------------------------------------------------- |
+| `pwd`     | Print current working directory                                           |
+| `ls`      | List files                                                                |
+| `ls -a`   | List all files (hidden as well .)                                         |
+| `ls-l`    | List files and directories in **long listing format**                     |
+| `ls -la`  | List files and directories **together with hidden** + long listing format |
+| `ls -ln`  | List file and directories **with numeric IDs**                            |
+| `ls -i`   | List files with inode numbers (stores metadata)                           |
+| `ls -lid` | Show inodes for directories                                               |
 
 # File permission and ownership
+
+- `umask` defines the default permission bits that **will be masked off**. A template for what permission bit should NOT be given automatically. For example, when new file is being created a default mode is _666_, then if `umask` is 0002 it becomes _664_. For directories it is _777_ and then would become _775_.
 
 - Permission string has the following format:
 
