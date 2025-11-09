@@ -142,7 +142,7 @@ services:
 
 _Safely edit config in the volume_
 
-- If you want to change the config **in the named volume**, do it through a temproray container that mounts the volume as **writable**:
+- If you want to change the config **in the named volume**, do it through a temporary container that mounts the volume as **writable**:
 
 ```
 docker run --rm -it \
