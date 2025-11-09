@@ -1,0 +1,6 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y curl
+COPY configs/basic-config.yaml /etc/myapp/config.yaml
+
+RUN echo "Building app v2.0"
