@@ -66,6 +66,44 @@ sudo chown [OPTIONS] NEW_OWNER[:NEW_GROUP] FILE
 - `sudo chown -R daniils:devs /home/daniils/Downloads` - recursively change ownership of all files in the directory
 - `sudo chown --reference=/home/daniils/tempalate.txt newfile.txt` - copy ownership from another file
 
+# File links
+
+1. Symbolic link
+
+- A **symlink** or **soft link** is a shortcut to another file, or simply put, it is a file that points to another file. If original file gets **moved or deleted** the link breaks as inodes are different. Mostly it is used for version tracking such as `node.js/nvm`, `java` and `python` where updates mean the distribution changes the symlink.
+
+To **create** the link:
+
+```
+ln -s [OPTIONS] FILE LINK
+```
+
+To **delete** the link:
+
+```
+unlink LINKED_FILE
+```
+
+2. Hard link
+
+- Point directly to the **inode** and deleting the original filename does **NOT** delete the data.
+- Only when all hard links are removed the data disappears and memory is freed.
+- Is commonly used for **backups**, or for reselience against **deletion**.
+- They do **NOT** occupy additional disk space for duplicates and they **continue** to work even if file is **renamed** or **moved**.
+- By changing **permission or ownership** of a hard-linked file, changes will be reflected **everywhere** (metadata is stored in the inode, NOT in the filename)
+
+```
+Filename -> inode -> file data
+              /
+Hard link -> /
+```
+
+Create the link with the following command:
+
+```
+ln EXISTING_FILE NEW_HARDLINK_FILE
+```
+
 # Hierarchy
 
 1. `/dev`
