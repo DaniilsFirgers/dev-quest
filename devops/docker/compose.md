@@ -2,7 +2,7 @@
 
 ## Environment variables vs docker secrets
 
-- Environment variables are key-values pars passed to the container at runtime. They are used for non-sensitive information like database port, non-sensitive urls and toggle features, because they can be seen using `docker inspect` or `docker exec`.
+- **Environment variables** are key-values pars passed to the container at runtime. They are used for non-sensitive information like database port, non-sensitive urls and toggle features, because they can be seen using `docker inspect` or `docker exec`.
 
 a) Using docker run
 
@@ -35,6 +35,25 @@ c) Using a `.env` file
 ```
 docker run --env-file .env myimage
 ```
+
+- **Docker secrets** in the docker compose allows you to safely manage sensitive data without exposing them as environment variables or in the image.
+
+```
+version: "3.8"
+
+services:
+  app:
+    image: busybox
+    secrets:
+      - db_password
+    command: tail -f /dev/null
+
+secrets:
+  db_password:
+    file: ../configs/db_password.txt
+```
+
+- The secret is hold in `/run/secrets/<name_of_file>`.
 
 // Cover yaml anchors and aliases
 
