@@ -1,0 +1,9 @@
+services:
+  app:
+    image: busybox
+    environment:
+      - APP_LEVEL=debug
+      - APP_TIMEOUT=30
+    env_file:
+      - ../configs/.env
+    command: tail -f /dev/null

@@ -12,7 +12,7 @@ docker run -e DB_USER=myuser -e DB_PASS=PASSWORD myimage
 
 - Sets variables using `-e` and can be access, for example, using `PROCESS.ENV` in the container of Node.js.
 
-b) Using Docker Compose
+b) Using Docker Compose you have two options, either to use `- ENV_NAME=value` or `ENV_NAME: value`
 
 ```
 services:
