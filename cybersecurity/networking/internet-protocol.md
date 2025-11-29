@@ -22,7 +22,28 @@ Also, it did not allow every device to have a separate IP address (private IP ad
 
    Theoretically in the private network of many devices, ports of a **single public IP can be exhausted**. For example, 300 devices \* 200 TCP connections = 60,000 (limit is roughly 64,000). Use **multiple** public IPs!
 
+   **CGNAT** (Carier-Grade NAT) - when one IP address is shared among various customers and each customer is given a unique port.
+
 2. Private IP addressing (RFC 1918)
+
+A **private IP address** is an IP thta is used **inside a private network** and is **not routable on the public internet**.
+
+| Class | Range                         | CIDR notation  |
+| ----- | ----------------------------- | -------------- |
+| A     | 10.0.0.0 - 10.255.255.255     | 10.0.0.8       |
+| B     | 172.16.0.0 - 172.31.255.255   | 172.16.0.0/12  |
+| C     | 192.168.0.0 - 192.168.255.255 | 192.168.0.0/16 |
+
+- Different classes let networks pick an appropriate size without wasting IPs.
+
+- **CIDR** (Classless Inter-Domain Routing) is a modern way to represent IP ranges using a **slash** `/` notation. Where `/ prefix_length` is numer of bits in the network portion of the IP. So, `/24` says first 24 bits is for **network** (basically, the network is `192.168.1.x`) and last 8 bits for **hosts** (2^8 = 256 possible addresses (0-255)).
+
+- IPv4 is represented in 4 groups of 8 bits like `11000000 10101000 00000001 00000001` (192.168.1.1). Here each bit represents a power of 2 starting from the right most with 2^0 and going to the left most increasing the power **twofold**.
+
+```
+1   1   0   0   0   0   0   0
+128 64  32  16  8   4   2   1
+```
 
 3. Dynamic Host Configuration Protocol (DHCP)
 
