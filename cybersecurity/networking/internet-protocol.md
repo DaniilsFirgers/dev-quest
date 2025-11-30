@@ -48,23 +48,23 @@ A **private IP address** is an IP thta is used **inside a private network** and 
 3. Dynamic Host Configuration Protocol (DHCP)
 
 - Back in the day you had to manually assign an IP address to the device in the local network by specifying the **IP address**, **subnet mask** and **default gateway**.
+
 - **Default gateway** - the device your computer sends traffic to when it does not know where else to send it. Fo example, inside your local network, your PC knows how to reach other devices directly, but **any external IP** is not inside your home network and packet goes to the **default gateway**.
+
 - But now there are **dynamic** IP addresses that are acquired via DHCP server.
-- **DHCP** works by leasing IP addresses to the devices for a period of tiem, and if a device does not extend the session, the IP address is returned back to the pool.
+
+- **DHCP** works by leasing IP addresses to the devices for a period of time, and if a device does not extend the session, the IP address is returned back to the pool.
 
 4. IPv6 introduction (128-bit addresses)
 
+- **Internet protocol version 6** is the successor to IPv4 version and uses **128-bit addresses** instead of IPv4's 32-bit.
+
+- Has **auto-configurations**, so devices can get addreses without DHCP.
+- No need for NAT, every device cna have a public IP.
+
 # Inefficient routing
 
-**Problems**:
-
-Classful addressing and its limitations (A, B, C classes)
-
-Routing table growth
-
 **Solutions**:
-
-Classless Inter-Domain Routing (CIDR)
 
 Hierarchical IP allocation
 
