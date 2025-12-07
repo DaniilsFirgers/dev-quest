@@ -60,7 +60,7 @@ A **private IP address** is an IP thta is used **inside a private network** and 
 - **Internet protocol version 6** is the successor to IPv4 version and uses **128-bit addresses** instead of IPv4's 32-bit.
 
 - Has **auto-configurations**, so devices can get addreses without DHCP.
-- No need for NAT, every device cna have a public IP.
+- No need for NAT, every device can have a public IP.
 
 # Inefficient routing
 
