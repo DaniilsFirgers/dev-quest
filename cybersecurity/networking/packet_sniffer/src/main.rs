@@ -3,6 +3,9 @@ use std::fmt;
 use std::mem;
 use std::ptr;
 
+mod utils;
+use crate::utils::ethernet::EtherType;
+
 fn main() {
     // Using unsafe block to call low-level C functions
 
@@ -63,8 +66,20 @@ fn parse_ethernet(data: &[u8]) {
     let dst_max = &data[0..6];
     let src_mac = &data[6..12];
     let ether_type = &data[12..14];
+
     println!(
         "Ethernet Header: \n\tDestination MAC: {:02x?}\n\tSource MAC: {:02x?}\n\tEtherType: {:02x?}",
         dst_max, src_mac, ether_type
     );
+    let ether_type_bytes = u16::from_be_bytes([ether_type[0], ether_type[1]]);
+
+    if let Some(eth_type) = EtherType::from_u16(ether_type_bytes) {
+        match eth_type {
+            EtherType::IPv4 => println!("EtherType: IPv4"),
+            EtherType::ARP => println!("EtherType: ARP"),
+            EtherType::IPv6 => println!("EtherType: IPv6"),
+        }
+    } else {
+        println!("EtherType: Unknown");
+    }
 }
