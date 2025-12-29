@@ -4,7 +4,7 @@ use std::mem;
 use std::ptr;
 
 mod utils;
-use crate::utils::ethernet::EtherType;
+use crate::utils::ethernet::{parse_arp, EtherType, HEADER_SIZE};
 
 fn main() {
     // Using unsafe block to call low-level C functions
@@ -58,7 +58,7 @@ fn parse_ethernet(data: &[u8]) {
     // 2. Source MAC (6 bytes)
     // 3. EtherType (2 bytes)
 
-    if data.len() < 14 {
+    if data.len() < HEADER_SIZE {
         println!("Packet too short for Ethernet header");
         return;
     }
@@ -76,7 +76,7 @@ fn parse_ethernet(data: &[u8]) {
     if let Some(eth_type) = EtherType::from_u16(ether_type_bytes) {
         match eth_type {
             EtherType::IPv4 => println!("EtherType: IPv4"),
-            EtherType::ARP => println!("EtherType: ARP"),
+            EtherType::ARP => parse_arp(&data[HEADER_SIZE..]),
             EtherType::IPv6 => println!("EtherType: IPv6"),
         }
     } else {
