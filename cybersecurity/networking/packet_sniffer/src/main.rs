@@ -4,7 +4,7 @@ use std::mem;
 use std::ptr;
 
 mod utils;
-use crate::utils::ethernet::{parse_arp, EtherType, HEADER_SIZE};
+use crate::utils::ethernet::{parse_arp, parse_ipv4, EtherType, HEADER_SIZE};
 
 fn main() {
     // Using unsafe block to call low-level C functions
@@ -42,7 +42,6 @@ fn main() {
             let size = recv(sock, buf.as_mut_ptr() as *mut _, buf.len(), 0);
 
             if size > 0 {
-                println!("Received packet of size: {}", size);
                 // NOTE: pass the buffer slice containing the packet data to parse_ethernet
                 parse_ethernet(&buf[0..size as usize]);
             }
@@ -67,15 +66,11 @@ fn parse_ethernet(data: &[u8]) {
     let src_mac = &data[6..12];
     let ether_type = &data[12..14];
 
-    println!(
-        "Ethernet Header: \n\tDestination MAC: {:02x?}\n\tSource MAC: {:02x?}\n\tEtherType: {:02x?}",
-        dst_max, src_mac, ether_type
-    );
     let ether_type_bytes = u16::from_be_bytes([ether_type[0], ether_type[1]]);
 
     if let Some(eth_type) = EtherType::from_u16(ether_type_bytes) {
         match eth_type {
-            EtherType::IPv4 => println!("EtherType: IPv4"),
+            EtherType::IPv4 => parse_ipv4(&data[HEADER_SIZE..]),
             EtherType::ARP => parse_arp(&data[HEADER_SIZE..]),
             EtherType::IPv6 => println!("EtherType: IPv6"),
         }
