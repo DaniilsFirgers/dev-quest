@@ -10,6 +10,8 @@
 // | Payload (variable length, e.g., ARP or IPv4 packet)       |
 // +----------------------------------------------------------+
 
+use super::tcp::parse_tcp;
+
 #[derive(Debug)]
 #[repr(u16)]
 pub enum EtherType {
@@ -144,4 +146,12 @@ pub fn parse_ipv4(_data: &[u8]) {
         src_ip[0], src_ip[1], src_ip[2], src_ip[3],
         dst_ip[0], dst_ip[1], dst_ip[2], dst_ip[3],
     );
+
+    match IPProtocol::from_u8(protocol) {
+        Some(IPProtocol::TCP) => {
+            let tcp_data = &_data[header_length..];
+            parse_tcp(tcp_data);
+        }
+        _ => {}
+    }
 }
