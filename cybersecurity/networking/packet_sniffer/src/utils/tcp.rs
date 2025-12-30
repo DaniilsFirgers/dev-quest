@@ -1,4 +1,17 @@
-const TCP_HEADER_SIZE: usize = 20;
+// MSS: Maximum Segment Size - trasnport layer (TCP) maximum payload size
+// TCP advertises MSS during the SYN handshake
+
+const TCP_HEADER_SIZE: usize = 20
+
+// TCP segment size 
+// TCP uses 16-bit length field, so 2^16 - 1 = 65535 bytes maximum
+// It includes IP header, TCP header, and TCP payload, so 65535 - 20 (IP header) - 20 (TCP header) = 65515 bytes for TCP payload
+
+// BUT, actual maximum segment size (MSS) is often lower due to network constraints like MTU
+// Common MSS values are 1460 bytes for Ethernet (1500 MTU - 20 IP header - 20 TCP header)
+
+// IMPORTANT:
+// \r\n\r\n indicates the end of HTTP headers
 
 pub fn parse_tcp(_data: &[u8]) {
     if _data.len() < TCP_HEADER_SIZE {
@@ -20,8 +33,16 @@ pub fn parse_tcp(_data: &[u8]) {
     }
 
     let payload = &_data[data_offset as usize..];
-    if scr_port == 80 || dst_port == 80 {
-        println!("HTTP Traffic Detected on port 80");
-        println!("TCP payload size: {} bytes", payload.len());
+    let is_http_request = dst_port == 80;
+
+    if is_http_request {
+        println!("HTTP request detected on port 80");
+        if !payload.is_empty() {
+            if let Ok(payload_str) = std::str::from_utf8(payload) {
+                println!("HTTP Payload:\n{}", payload_str);
+            } else {
+                println!("HTTP Payload contains non-UTF8 data.");
+            }
+        }
     }
 }
