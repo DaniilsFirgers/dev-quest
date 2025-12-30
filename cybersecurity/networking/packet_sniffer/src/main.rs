@@ -4,8 +4,8 @@ use std::mem;
 use std::ptr;
 
 mod utils;
-use crate::utils::ethernet::{parse_arp, parse_ipv4, EtherType, HEADER_SIZE};
-
+use crate::utils::ethernet::{parse_arp, EtherType, HEADER_SIZE};
+use crate::utils::ipv4::parse_ipv4;
 fn main() {
     // Using unsafe block to call low-level C functions
 
