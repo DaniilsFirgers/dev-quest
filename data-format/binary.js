@@ -107,3 +107,26 @@ function fromHexToBinary(hex, byteSplit = true) {
 }
 
 console.log("From HEX to binary", fromHexToBinary("AC"));
+
+// When we convert from binary to hex, we take 4 bits binary (range 0000 to 1111) that
+// represents 0 to 15, exactly what HEX covers
+
+function fromBinaryToHex(binary) {
+  if (typeof binary !== "string") throw Error("Binary input is not a string");
+  // split binary into chunks of 4
+  const chunks = binary.match(/.{1,4}/g);
+
+  let finalHex = "";
+
+  for (const chunk of chunks) {
+    const decimal = fromBinaryToDecimal(chunk);
+    const hexByIndex = hexDigits.at(decimal);
+    if (!hexByIndex) throw Error(`Hex by index is not found for ${decimal}`);
+
+    finalHex += hexByIndex;
+  }
+
+  return finalHex;
+}
+
+console.log("From binary to HEX", fromBinaryToHex("10101100"));
