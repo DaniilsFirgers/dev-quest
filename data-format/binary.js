@@ -7,7 +7,7 @@
 // Binary is a base-2 numeral system that uses two symbols, typically 0 and 1.
 // Each digit in a binary number is referred to as a bit.
 
-// 1. Converting binary to decimal
+// 1. Converting binary to decimal and vice versa
 
 // Binary place values from right to left:
 // 128, 64, 32, 16, 8, 4, 2, 1
@@ -130,3 +130,25 @@ function fromBinaryToHex(binary) {
 }
 
 console.log("From binary to HEX", fromBinaryToHex("10101100"));
+
+// 3. Converting HEX to decimal and vice versa
+
+// Split digits, for example, `2F` into `2` and `F`
+// Then convert to decimal values -> 2 and 15 (15 is F in HEX)
+// Multiply by powers of 16
+
+function fromHexToDecimal(hex) {
+  const splitHex = hex.split("").reverse();
+
+  let decimal = 0;
+
+  for (const [idx, subHex] of splitHex.entries()) {
+    const subHexIdx = hexDigits.indexOf(subHex);
+    if (!subHexIdx) throw Error(`Sub hex index not found for ${subHex}`);
+    decimal += subHexIdx * 16 ** idx;
+  }
+
+  return decimal;
+}
+
+console.log("From HEX to decimal", fromHexToDecimal("1A3"));
