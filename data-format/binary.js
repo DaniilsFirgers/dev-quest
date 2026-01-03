@@ -152,3 +152,35 @@ function fromHexToDecimal(hex) {
 }
 
 console.log("From HEX to decimal", fromHexToDecimal("1A3"));
+
+// To go from decimal to HEX
+// Need to convert from base-10 to base-16
+// 1. If N==0, stop
+// 2. Divide N by 16
+// 3. Record the remainder (N % 16)
+// 4. Convert remainder to hex digit (0-9, A-F)
+// 5. Set N = floor(N/16)
+// 6. Repeat steps 2-5
+// 7. Reverse the collected digits
+
+function fromDecimalToHex(decimal) {
+  if (typeof decimal !== "number")
+    throw Error(`Decimal ${decimal} is not a number`);
+
+  let quotient = decimal;
+  let finalHex = "";
+
+  while (quotient > 0) {
+    const currQuotient = Math.floor(quotient / 16);
+
+    const modulo = quotient % 16;
+    const hex = hexDigits.at(modulo);
+    finalHex += hex;
+
+    quotient = currQuotient;
+  }
+
+  return finalHex.split("").reverse().join("");
+}
+
+console.log("From decimal to HEX", fromDecimalToHex(419));
