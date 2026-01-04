@@ -12,6 +12,8 @@
 
 // 1. Converting binary to decimal and vice versa
 
+// IMPORTANT: Binary prefix: 0b
+
 // Binary place values from right to left:
 // 128, 64, 32, 16, 8, 4, 2, 1
 // or 2^7, 2^6, 2^5, 2^4, 2^3, 2^2, 2^1, 2^0
@@ -70,6 +72,7 @@ function fromDecimalToBinary(decimal, padStart = false) {
 console.log("From decimal to binary", fromDecimalToBinary(49, true));
 
 // 2. Converting binary to hexadecimal and vice versa
+// IMPORTANT: Hex prefix: 0x
 
 // Hex is base 16, meaning, each place value is a power of 16
 // It goes 0-9 and then A-F
@@ -186,4 +189,4 @@ function fromDecimalToHex(decimal) {
   return finalHex.split("").reverse().join("");
 }
 
-console.log("From decimal to HEX", fromDecimalToHex(419));
+console.log("From decimal to HEX", fromDecimalToHex(97));
