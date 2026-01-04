@@ -4,6 +4,9 @@
 // From the bites, we build bytes, and from bytes, we construct complex data structures.
 // 1 bytes = 8 bits
 
+// What is base-n numeral system?
+// A way to represent numbers using different bases.
+
 // Binary is a base-2 numeral system that uses two symbols, typically 0 and 1.
 // Each digit in a binary number is referred to as a bit.
 
