@@ -1,0 +1,18 @@
+target_server:
+  ip: "54.80.48.62"
+  port: 80
+
+arp:
+  log: false # boolean true/false to log ARP packets
+  kind: "all" # options: "all", "request", "reply"
+
+ipv4:
+  log: true # boolean true/false to log IPv4 packets
+  protocols: # list of protocols to log, options: "tcp", "udp", "icmp"
+    - "tcp"
+  include_headers: true # boolean true/false to include headers in logs
+
+protocols:
+  tcp:
+    log: true # boolean true/false to log TCP packets
+    parse_payload: false # boolean true/false to parse TCP payload
