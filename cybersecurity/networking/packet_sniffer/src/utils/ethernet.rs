@@ -10,6 +10,47 @@
 // | Payload (variable length, e.g., ARP or IPv4 packet)       |
 // +----------------------------------------------------------+
 
+use crate::config::Config;
+use crate::utils::ipv4::parse_ipv4;
+
+pub fn parse_ethernet(data: &[u8], config: &Config) {
+    // A raw packet starts with an Ethernet header
+    // Ethernet header is 14 bytes long
+
+    // 1. Destination MAC (6 bytes)
+    // 2. Source MAC (6 bytes)
+    // 3. EtherType (2 bytes)
+
+    if data.len() < HEADER_SIZE {
+        println!("Packet too short for Ethernet header");
+        return;
+    }
+
+    // let dst_mac = &data[0..6];
+    // let src_mac = &data[6..12];
+    let ether_type = &data[12..14];
+
+    let ether_type_bytes = u16::from_be_bytes([ether_type[0], ether_type[1]]);
+
+    if let Some(eth_type) = EtherType::from_u16(ether_type_bytes) {
+        match eth_type {
+            EtherType::IPv4 => {
+                if config.ipv4.log {
+                    parse_ipv4(&data[HEADER_SIZE..], config)
+                }
+            }
+            EtherType::ARP => {
+                if config.arp.log {
+                    parse_arp(&data[HEADER_SIZE..], config)
+                }
+            }
+            EtherType::IPv6 => {}
+        }
+    } else {
+        println!("EtherType: Unknown");
+    }
+}
+
 #[derive(Debug)]
 #[repr(u16)]
 pub enum EtherType {
@@ -48,17 +89,36 @@ impl EtherType {
 // while 00:00:00:00:00:00 is a null MAC address (used in ARP requests for target MAC)
 
 const ARP_HEADER_SIZE: usize = 28;
-pub fn parse_arp(data: &[u8]) {
+fn parse_arp(data: &[u8], config: &Config) {
     if data.len() < ARP_HEADER_SIZE {
         println!("Packet too short for ARP header");
         return;
+    }
+
+    let opcode = u16::from_be_bytes([data[6], data[7]]);
+    match opcode {
+        1 => {
+            // 1 is request
+            if config.arp.kind == "reply" {
+                return;
+            }
+        }
+        2 => {
+            // 2 is reply
+            if config.arp.kind == "request" {
+                return;
+            }
+        }
+        _ => {
+            // TODO: log here
+            return;
+        }
     }
 
     let hardware_type = u16::from_be_bytes([data[0], data[1]]);
     let protocol_type = u16::from_be_bytes([data[2], data[3]]);
     let hardware_size = data[4];
     let protocol_size = data[5];
-    let opcode = u16::from_be_bytes([data[6], data[7]]);
 
     let sender_mac = &data[8..14];
     let sender_ip = &data[14..18];

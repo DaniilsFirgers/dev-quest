@@ -1,14 +1,18 @@
 use libc::*;
-use std::fmt;
-use std::mem;
-use std::ptr;
 
+mod config;
 mod utils;
-use crate::utils::ethernet::{parse_arp, EtherType, HEADER_SIZE};
-use crate::utils::ipv4::parse_ipv4;
-fn main() {
-    // Using unsafe block to call low-level C functions
+use crate::utils::ethernet::parse_ethernet;
 
+fn main() {
+    let config = config::read_config();
+    if let Err(e) = config {
+        panic!("Failed to read config: {}", e);
+    }
+
+    let config = config.unwrap();
+
+    // Using unsafe block to call low-level C functions
     unsafe {
         // Create a raw socket with the following parameters:
         // AF_PACKET: address family for low-level packet interface (gives access to 2 OSI layer)
@@ -43,38 +47,8 @@ fn main() {
 
             if size > 0 {
                 // NOTE: pass the buffer slice containing the packet data to parse_ethernet
-                parse_ethernet(&buf[0..size as usize]);
+                parse_ethernet(&buf[0..size as usize], &config);
             }
         }
-    }
-}
-
-fn parse_ethernet(data: &[u8]) {
-    // A raw packet starts with an Ethernet header
-    // Ethernet header is 14 bytes long
-
-    // 1. Destination MAC (6 bytes)
-    // 2. Source MAC (6 bytes)
-    // 3. EtherType (2 bytes)
-
-    if data.len() < HEADER_SIZE {
-        println!("Packet too short for Ethernet header");
-        return;
-    }
-
-    let dst_max = &data[0..6];
-    let src_mac = &data[6..12];
-    let ether_type = &data[12..14];
-
-    let ether_type_bytes = u16::from_be_bytes([ether_type[0], ether_type[1]]);
-
-    if let Some(eth_type) = EtherType::from_u16(ether_type_bytes) {
-        match eth_type {
-            EtherType::IPv4 => parse_ipv4(&data[HEADER_SIZE..]),
-            EtherType::ARP => parse_arp(&data[HEADER_SIZE..]),
-            EtherType::IPv6 => println!("EtherType: IPv6"),
-        }
-    } else {
-        println!("EtherType: Unknown");
     }
 }

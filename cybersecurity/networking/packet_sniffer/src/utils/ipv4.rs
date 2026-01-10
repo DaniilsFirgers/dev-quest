@@ -1,4 +1,5 @@
 use super::tcp::parse_tcp;
+use crate::config::Config;
 // +----------------+----------------+----------------+----------------+
 // | Version + IHL  | Type of Service| Total Length                     |
 // +----------------+----------------+----------------+----------------+
@@ -34,7 +35,7 @@ impl IPProtocol {
     }
 }
 
-pub fn parse_ipv4(_data: &[u8]) {
+pub fn parse_ipv4(_data: &[u8], _config: &Config) {
     if _data.len() < IPV4_HEADER_MIN_SIZE {
         println!("Packet too short for IPv4 header");
         return;
