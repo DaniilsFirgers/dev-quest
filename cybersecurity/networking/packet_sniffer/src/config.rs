@@ -9,13 +9,13 @@ pub fn read_config() -> Result<Config, Box<dyn std::error::Error>> {
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub target_server: TargetServer,
+    pub target_server: Option<TargetServer>,
     pub arp: Arp,
     pub ipv4: Ipv4,
     pub protocols: Protocols,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct TargetServer {
     pub ip: String,
     pub port: u16,
