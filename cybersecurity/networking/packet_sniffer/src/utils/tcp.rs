@@ -3,6 +3,8 @@
 
 use std::{collections::BTreeMap, net::IpAddr};
 
+use crate::config::TargetServer;
+
 const TCP_HEADER_SIZE: usize = 20;
 
 // TCP segment size
@@ -94,7 +96,7 @@ impl ConnectionState {
     }
 }
 
-pub fn parse_tcp(_data: &[u8]) {
+pub fn parse_tcp(_data: &[u8], parse_payload: bool, target_server: Option<TargetServer>) {
     if _data.len() < TCP_HEADER_SIZE {
         println!("Data too short to contain a valid TCP header.");
         return;
@@ -113,11 +115,15 @@ pub fn parse_tcp(_data: &[u8]) {
         return;
     }
 
-    let payload = &_data[data_offset as usize..];
-    let is_http_request = dst_port == 80;
+    let is_http_request = scr_port == 80;
 
     if is_http_request {
         println!("HTTP request detected on port 80");
+        if !parse_payload {
+            return;
+        }
+
+        let payload = &_data[data_offset as usize..];
         if !payload.is_empty() {
             if let Ok(payload_str) = std::str::from_utf8(payload) {
                 println!("HTTP Payload:\n{}", payload_str);

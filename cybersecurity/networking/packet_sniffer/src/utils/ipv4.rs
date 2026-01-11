@@ -1,3 +1,5 @@
+use std::net::Ipv4Addr;
+
 use super::tcp::parse_tcp;
 use crate::config::Config;
 // +----------------+----------------+----------------+----------------+
@@ -35,7 +37,7 @@ impl IPProtocol {
     }
 }
 
-pub fn parse_ipv4(_data: &[u8], _config: &Config) {
+pub fn parse_ipv4(_data: &[u8], config: &Config) {
     if _data.len() < IPV4_HEADER_MIN_SIZE {
         println!("Packet too short for IPv4 header");
         return;
@@ -53,9 +55,17 @@ pub fn parse_ipv4(_data: &[u8], _config: &Config) {
     let protocol = _data[9];
 
     let src_ip = &_data[12..16];
+    if let Some(target) = &config.target_server {
+        let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
+        if src_ip != target_ip.octets() {
+            return;
+        }
+    }
+
     let dst_ip = &_data[16..20];
 
-    println!(
+    if config.ipv4.include_headers {
+        println!(
         "IPv4 Header: \n\tVersion: {}\n\tIHL: {} ({} bytes)\n\tProtocol: {:?}\n\tSource IP: {}.{}.{}.{}\n\tDestination IP: {}.{}.{}.{}",
         version,
         ihl,
@@ -64,11 +74,19 @@ pub fn parse_ipv4(_data: &[u8], _config: &Config) {
         src_ip[0], src_ip[1], src_ip[2], src_ip[3],
         dst_ip[0], dst_ip[1], dst_ip[2], dst_ip[3],
     );
+    }
 
     match IPProtocol::from_u8(protocol) {
         Some(IPProtocol::TCP) => {
+            if !config.protocols.tcp.log {
+                return;
+            }
             let tcp_data = &_data[header_length..];
-            parse_tcp(tcp_data);
+            parse_tcp(
+                tcp_data,
+                config.protocols.tcp.parse_payload,
+                config.target_server.clone(),
+            );
         }
         _ => {}
     }
