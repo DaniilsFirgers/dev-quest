@@ -1,6 +1,6 @@
 target_server:
   ip: "127.0.0.1"
-  port:
+  port: 8080
 
 arp:
   log: false # boolean true/false to log ARP packets
