@@ -2,6 +2,7 @@ use std::net::Ipv4Addr;
 
 use super::tcp::parse_tcp;
 use crate::config::Config;
+use crate::utils::tcp::TcpParserParams;
 // +----------------+----------------+----------------+----------------+
 // | Version + IHL  | Type of Service| Total Length                     |
 // +----------------+----------------+----------------+----------------+
@@ -84,8 +85,11 @@ pub fn parse_ipv4(_data: &[u8], config: &Config) {
             let tcp_data = &_data[header_length..];
             parse_tcp(
                 tcp_data,
-                config.protocols.tcp.parse_payload,
-                config.target_server.clone(),
+                TcpParserParams {
+                    parse_payload: config.protocols.tcp.parse_payload,
+                    src_ip: Ipv4Addr::new(src_ip[0], src_ip[1], src_ip[2], src_ip[3]),
+                    target_server: config.target_server.clone(),
+                },
             );
         }
         _ => {}

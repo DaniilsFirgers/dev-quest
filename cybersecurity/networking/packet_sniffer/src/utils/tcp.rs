@@ -1,7 +1,10 @@
 // MSS: Maximum Segment Size - trasnport layer (TCP) maximum payload size
 // TCP advertises MSS during the SYN handshake
 
-use std::{collections::BTreeMap, net::IpAddr};
+use std::{
+    collections::BTreeMap,
+    net::{IpAddr, Ipv4Addr},
+};
 
 use crate::config::TargetServer;
 
@@ -96,14 +99,27 @@ impl ConnectionState {
     }
 }
 
-pub fn parse_tcp(_data: &[u8], parse_payload: bool, target_server: Option<TargetServer>) {
+pub struct TcpParserParams {
+    pub parse_payload: bool,
+    pub src_ip: Ipv4Addr,
+    pub target_server: Option<TargetServer>,
+}
+
+pub fn parse_tcp(_data: &[u8], params: TcpParserParams) {
     if _data.len() < TCP_HEADER_SIZE {
         println!("Data too short to contain a valid TCP header.");
         return;
     }
 
     let scr_port = u16::from_be_bytes([_data[0], _data[1]]);
-    let dst_port = u16::from_be_bytes([_data[2], _data[3]]);
+    if let Some(target) = &params.target_server {
+        let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
+        if scr_port != target.port && params.src_ip != target_ip {
+            return;
+        }
+    }
+
+    // let dst_port = u16::from_be_bytes([_data[2], _data[3]]);
 
     // We look for 4 bits in the 13th byte (index 12) and then multiply by 4
     // because the data offset is given in 32-bit words
@@ -115,21 +131,31 @@ pub fn parse_tcp(_data: &[u8], parse_payload: bool, target_server: Option<Target
         return;
     }
 
-    let is_http_request = scr_port == 80;
-
-    if is_http_request {
-        println!("HTTP request detected on port 80");
-        if !parse_payload {
-            return;
-        }
-
-        let payload = &_data[data_offset as usize..];
-        if !payload.is_empty() {
-            if let Ok(payload_str) = std::str::from_utf8(payload) {
-                println!("HTTP Payload:\n{}", payload_str);
-            } else {
-                println!("HTTP Payload contains non-UTF8 data.");
-            }
-        }
+    if !params.parse_payload {
+        return;
     }
+
+    let payload = &_data[data_offset as usize..];
+    if payload.is_empty() {
+        return;
+    }
+    if is_tcp_secure(payload) {
+        println!("Secure TCP payload detected (TLS/SSL), skipping HTTP parsing.");
+        return;
+    }
+
+    if let Ok(payload_str) = std::str::from_utf8(payload) {
+        println!("HTTP Payload:\n{}", payload_str);
+    } else {
+        println!("HTTP Payload contains non-UTF8 data.");
+    }
+}
+
+fn is_tcp_secure(payload: &[u8]) -> bool {
+    // Check for TLS ClientHello (0x16 0x03 0x01 or 0x16 0x03 0x03)
+    if payload.len() < 3 {
+        return false;
+    }
+
+    payload[0] == 0x16 && (payload[1] == 0x03 && (payload[2] == 0x01 || payload[2] == 0x03))
 }
