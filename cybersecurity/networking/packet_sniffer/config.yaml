@@ -1,6 +1,6 @@
 target_server:
   ip: "127.0.0.1"
-  port: 8080
+  port: 11011
 
 arp:
   log: false # boolean true/false to log ARP packets
@@ -15,4 +15,4 @@ ipv4:
 protocols:
   tcp:
     log: true # boolean true/false to log TCP packets
-    parse_payload: false # boolean true/false to parse TCP payload
+    parse_payload: true # boolean true/false to parse TCP payload
