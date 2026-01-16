@@ -2,6 +2,9 @@
   "folders": [
     {
       "path": "cybersecurity/networking/packet_sniffer"
+    },
+    {
+      "path": "cybersecurity/vulnerable-app"
     }
   ],
   "settings": {
