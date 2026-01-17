@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { readFileSync } from "fs";
 import path from "path";
 
-// Etag or Entity Tag is an https header taht acts as a version identifier for a resource.
+// Etag or Entity Tag is an https header taht acts as a version identifier for a resource. Etag is essentially a checksum or hash value!
 // It lets clients make conditional requests and helps with caching and optimizing bandwidth.
 
 // 1. Example response with ETag header
@@ -19,7 +19,10 @@ import path from "path";
 
 // HTTP/1.1 304 Not Modified
 
-// IMPORTANT: Cache-control max-age vs ETag
+// IMPORTANT:
+// 1. Use etags for resources that change infrequently to optimize bandwidth.
+// 2. Do not use etags for highly dynamic content as it may lead to unnecessary validation requests.
+// 3. Do not use etags for sensitive data that should not be cached or shared between users.
 
 export const etagRouter = Router();
 
@@ -28,7 +31,7 @@ function createEtag(data: string): string {
   for (let i = 0; i < data.length; i++) {
     const char = data.charCodeAt(i);
     hash = (hash << 5) - hash + char;
-    hash |= 0; // Convert to 32bit integer
+    hash |= 0;
   }
   return `"${hash.toString(16)}"`;
 }
@@ -43,6 +46,7 @@ etagRouter.get("/", (req: Request, res: Response) => {
     return;
   }
 
+  res.setHeader("Cache-Control", "public, max-age=600"); // Cache for 10 minutes
   res.setHeader("ETag", etag);
   res.sendFile(filePath);
 });
