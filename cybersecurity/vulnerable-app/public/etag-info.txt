@@ -11,5 +11,5 @@ GET /resource HTTP/1.1
 If-None-Match: "686897696a7c876b7
 
 3. If the resource hasn't changed, the server responds with a 304 Not Modified statu
-HTTP/1.1 304 Not Modifi
+HTTP/1.1 304 Not Modified
 IMPORTANT: Cache-control max-age vs ETag
