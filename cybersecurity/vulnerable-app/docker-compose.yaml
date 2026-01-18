@@ -1,0 +1,10 @@
+services:
+  backend:
+    container_name: vulnerable-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "11011:80"
