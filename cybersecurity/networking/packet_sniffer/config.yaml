@@ -4,7 +4,7 @@ target_server:
 
 # http bin
 # target_server:
-#   ip: "52.20.30.6"
+#   ip: "98.88.114.252"
 #   port: 80
 
 arp:
