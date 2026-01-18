@@ -54,15 +54,7 @@ pub fn parse_ipv4(_data: &[u8], config: &Config, reassembly_table: &mut TcpReass
     let header_length = (ihl * 4) as usize; // IHL is in 32-bit words, so multiply by 4 to get bytes
 
     let protocol = _data[9];
-
     let src_ip = &_data[12..16];
-    if let Some(target) = &config.target_server {
-        let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
-        if src_ip != target_ip.octets() {
-            return;
-        }
-    }
-
     let dst_ip = &_data[16..20];
 
     if config.ipv4.include_headers {

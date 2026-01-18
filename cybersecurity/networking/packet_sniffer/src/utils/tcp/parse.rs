@@ -26,6 +26,17 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
     let src_port = u16::from_be_bytes([_data[0], _data[1]]);
     let dst_port = u16::from_be_bytes([_data[2], _data[3]]);
 
+    if let Some(target) = &params.target_server {
+        let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
+        if params.src_ip != target_ip || src_port != target.port {
+            return;
+        }
+    }
+    println!(
+        "TCP Packet: {}:{} -> {}:{}",
+        params.src_ip, src_port, params.dst_ip, dst_port
+    );
+
     let from_client = match &params.target_server {
         Some(server) => {
             let server_ip: Ipv4Addr = server.ip.parse().expect("Invalid target IP address");
@@ -72,7 +83,7 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
 
     let payload = &_data[data_offset as usize..];
     if payload.is_empty() {
-        println!("Empty TCP payload, nothing to parse.");
+        println!("Empty TCP payload, nothing to parse. Seq: {}", seq_num);
         return;
     }
 
