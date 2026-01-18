@@ -1,8 +1,10 @@
+use std::collections::HashMap;
+
 use libc::*;
 
 mod config;
 mod utils;
-use crate::utils::ethernet::parse_ethernet;
+use crate::utils::{ethernet::parse_ethernet, tcp::state::TcpReassemblyTable};
 
 fn main() {
     let config = config::read_config();
@@ -11,6 +13,9 @@ fn main() {
     }
 
     let config = config.unwrap();
+    let mut reassembly_table = TcpReassemblyTable {
+        connections: HashMap::new(),
+    };
 
     // Using unsafe block to call low-level C functions
     unsafe {
@@ -47,7 +52,7 @@ fn main() {
 
             if size > 0 {
                 // NOTE: pass the buffer slice containing the packet data to parse_ethernet
-                parse_ethernet(&buf[0..size as usize], &config);
+                parse_ethernet(&buf[0..size as usize], &config, &mut reassembly_table);
             }
         }
     }

@@ -12,8 +12,9 @@
 
 use crate::config::Config;
 use crate::utils::ipv4::parse_ipv4;
+use crate::utils::tcp::state::TcpReassemblyTable;
 
-pub fn parse_ethernet(data: &[u8], config: &Config) {
+pub fn parse_ethernet(data: &[u8], config: &Config, reassembly_table: &mut TcpReassemblyTable) {
     // A raw packet starts with an Ethernet header
     // Ethernet header is 14 bytes long
 
@@ -36,7 +37,7 @@ pub fn parse_ethernet(data: &[u8], config: &Config) {
         match eth_type {
             EtherType::IPv4 => {
                 if config.ipv4.log {
-                    parse_ipv4(&data[HEADER_SIZE..], config)
+                    parse_ipv4(&data[HEADER_SIZE..], config, reassembly_table)
                 }
             }
             EtherType::ARP => {

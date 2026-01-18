@@ -1,8 +1,8 @@
 use std::net::Ipv4Addr;
 
-use super::tcp::parse_tcp;
 use crate::config::Config;
-use crate::utils::tcp::TcpParserParams;
+use crate::utils::tcp::parse::{parse_tcp, TcpParserParams};
+use crate::utils::tcp::state::TcpReassemblyTable;
 // +----------------+----------------+----------------+----------------+
 // | Version + IHL  | Type of Service| Total Length                     |
 // +----------------+----------------+----------------+----------------+
@@ -38,7 +38,7 @@ impl IPProtocol {
     }
 }
 
-pub fn parse_ipv4(_data: &[u8], config: &Config) {
+pub fn parse_ipv4(_data: &[u8], config: &Config, reassembly_table: &mut TcpReassemblyTable) {
     if _data.len() < IPV4_HEADER_MIN_SIZE {
         println!("Packet too short for IPv4 header");
         return;
@@ -87,11 +87,17 @@ pub fn parse_ipv4(_data: &[u8], config: &Config) {
                 tcp_data,
                 TcpParserParams {
                     parse_payload: config.protocols.tcp.parse_payload,
-                    src_ip: Ipv4Addr::new(src_ip[0], src_ip[1], src_ip[2], src_ip[3]),
+                    src_ip: from_bytes_to_ipv4_addr(src_ip),
+                    dst_ip: from_bytes_to_ipv4_addr(dst_ip),
                     target_server: config.target_server.clone(),
                 },
+                reassembly_table,
             );
         }
         _ => {}
     }
+}
+
+fn from_bytes_to_ipv4_addr(bytes: &[u8]) -> Ipv4Addr {
+    Ipv4Addr::new(bytes[0], bytes[1], bytes[2], bytes[3])
 }
