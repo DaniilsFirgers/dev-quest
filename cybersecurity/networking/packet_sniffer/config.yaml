@@ -3,9 +3,9 @@ target_server:
   port: 11011
 
 # http bin
-#target_server:
-#ip: "98.88.114.252"
-#port: 80
+# target_server:
+#   ip: "52.20.30.6"
+#   port: 80
 
 arp:
   log: false # boolean true/false to log ARP packets
