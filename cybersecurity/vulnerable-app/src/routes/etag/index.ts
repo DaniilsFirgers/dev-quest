@@ -37,7 +37,8 @@ function createEtag(data: string): string {
 }
 
 etagRouter.get("/", (req: Request, res: Response) => {
-  const filePath = path.resolve("public/etag-info.txt");
+  const rootDir = process.cwd();
+  const filePath = path.join(rootDir, "public", "etag-info.txt");
   const fileBuffer = readFileSync(filePath);
   const etag = createEtag(fileBuffer.toString());
 

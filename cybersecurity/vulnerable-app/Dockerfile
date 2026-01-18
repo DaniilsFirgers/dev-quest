@@ -9,7 +9,8 @@ WORKDIR /app
 
 # Copy required files
 COPY package.json tsconfig.json pnpm-lock.yaml ./
-COPY src public /app/
+COPY src/ /app/src/
+COPY public/ /app/public/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
