@@ -9,3 +9,11 @@ services:
       - ./public:/app/public
     ports:
       - "11011:11011"
+    networks:
+      - testnet
+
+networks:
+  testnet:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1000
