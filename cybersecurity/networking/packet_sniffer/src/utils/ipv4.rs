@@ -78,7 +78,6 @@ pub fn parse_ipv4(_data: &[u8], config: &Config, reassembly_table: &mut TcpReass
             parse_tcp(
                 tcp_data,
                 TcpParserParams {
-                    parse_payload: config.protocols.tcp.parse_payload,
                     src_ip: from_bytes_to_ipv4_addr(src_ip),
                     dst_ip: from_bytes_to_ipv4_addr(dst_ip),
                     target_server: config.target_server.clone(),

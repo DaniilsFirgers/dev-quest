@@ -11,7 +11,6 @@ use crate::{
 const TCP_HEADER_SIZE: usize = 20;
 
 pub struct TcpParserParams {
-    pub parse_payload: bool,
     pub src_ip: Ipv4Addr,
     pub dst_ip: Ipv4Addr,
     pub target_server: Option<TargetServer>,
@@ -28,14 +27,11 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
 
     if let Some(target) = &params.target_server {
         let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
+        // NOTE: we are only interested in the pakcets from server to client
         if params.src_ip != target_ip || src_port != target.port {
             return;
         }
     }
-    println!(
-        "TCP Packet: {}:{} -> {}:{}",
-        params.src_ip, src_port, params.dst_ip, dst_port
-    );
 
     let from_client = match &params.target_server {
         Some(server) => {
@@ -62,8 +58,8 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         .connections
         .entry(conn_key.clone())
         .or_insert_with(|| {
-            let initial_seq_c2s = if from_client { seq_num } else { 0 };
-            let initial_seq_s2c = if from_client { 0 } else { seq_num };
+            let initial_seq_c2s = if from_client { seq_num + 1 } else { 0 };
+            let initial_seq_s2c = if from_client { 0 } else { seq_num + 1 };
             ConnectionState::new(initial_seq_c2s, initial_seq_s2c)
         });
 
@@ -77,17 +73,11 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         return;
     }
 
-    if !params.parse_payload {
-        return;
-    }
-
     let payload = &_data[data_offset as usize..];
-    if payload.is_empty() {
-        println!("Empty TCP payload, nothing to parse. Seq: {}", seq_num);
-        return;
+    if !payload.is_empty() {
+        conn_state.add_segment(seq_num, payload, from_client);
     }
 
-    conn_state.add_segment(seq_num, payload, from_client);
     let assembled_data = if from_client {
         &conn_state.assembled_c2s
     } else {
@@ -99,8 +89,10 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         return;
     }
 
-    if !assembled_data.is_empty() {
-        if let Ok(payload_str) = std::str::from_utf8(assembled_data) {
+    println!("Assembled TCP data length: {}", assembled_data.len());
+    // TODO: take into accunt retransmissions and out-of-order segments
+    if !payload.is_empty() {
+        if let Ok(payload_str) = std::str::from_utf8(payload) {
             println!("Reassembled TCP Payload:\n{}", payload_str);
         }
     }

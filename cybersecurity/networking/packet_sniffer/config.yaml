@@ -4,7 +4,7 @@ target_server:
 
 # http bin
 # target_server:
-#   ip: "98.88.114.252"
+#   ip: "100.25.104.226"
 #   port: 80
 
 arp:
@@ -20,4 +20,4 @@ ipv4:
 protocols:
   tcp:
     log: true # boolean true/false to log TCP packets
-    parse_payload: true # boolean true/false to parse TCP payload
+

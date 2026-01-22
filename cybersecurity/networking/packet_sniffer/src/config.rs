@@ -42,5 +42,4 @@ pub struct Protocols {
 #[derive(Debug, Deserialize)]
 pub struct Tcp {
     pub log: bool,
-    pub parse_payload: bool,
 }
