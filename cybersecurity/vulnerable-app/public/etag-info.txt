@@ -1,5 +1,8 @@
 Etag or Entity Tag is an https header taht acts as a version identifier for a resource.
-It lets clients make conditional requests and helps with caching and optimizing bandwidt
+It lets clients make conditional requests and helps with caching and optimizing bandwidth.
+
+The "ETag" (Entity Tag) concept for web caching was introduced with the HTTP/1.1 specification, with support in web servers and browsers developing through the late 1990s, 
+becoming a standard feature around 2001-2002, though work on its underlying principles was discussed earlier, with W3C notes around 1999. 
 
 1. Example response with ETag head
 HTTP/1.1 200 OK
@@ -13,3 +16,15 @@ If-None-Match: "686897696a7c876b7
 3. If the resource hasn't changed, the server responds with a 304 Not Modified statu
 HTTP/1.1 304 Not Modified
 IMPORTANT: Cache-control max-age vs ETag
+
+
+Etag vs Cache:
+
+- Expires and Cache-Control are "strong caching headers".
+- Last-Modified and ETag are "weak caching headers"
+- First the browser check Expires/Cache-Control to determine whether or not to make a request to the server
+- If have to make a request, it will send Last-Modified/ETag in the HTTP request. If the Etag value of the document matches that, 
+the server will send a 304 code instead of 200, and no content. The browser will load the contents from its cache.
+
+Depending on your needs it may just add extra bytes in your headers which may increase packets which means more TCP overhead. 
+Again, you should see if the overhead of having both things in your headers is necessary or will it just add extra weight in your requests which reduces performance.
