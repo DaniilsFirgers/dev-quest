@@ -50,3 +50,16 @@ These are instructions to the parser, not an element!
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 ```
+
+It tells XML version and character encoding.
+
+## Namespaces
+
+- It tells the parser which **vocabulary** an attribute or an element belongs to. It tells **what it means**.
+
+In the system with payment and order systems this solves ambiguity:
+
+```
+<ord:status>CONFIRMED</ord:status>
+<pay:status>PAID</pay:status>
+```
