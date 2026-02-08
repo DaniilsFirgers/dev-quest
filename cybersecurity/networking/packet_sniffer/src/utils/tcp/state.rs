@@ -24,12 +24,12 @@ pub struct ConnectionKey {
 
 pub struct ConnectionState {
     // Client to Server
-    pub next_seq_c2s: u32,                  // Sequence number + payload length
+    pub next_seq_c2s: Option<u32>, // Sequence number + payload length
     pub buffer_c2s: BTreeMap<u32, Vec<u8>>, // Buffer for out-of-order segments
-    pub assembled_c2s: Vec<u8>,             // Assembled data
+    pub assembled_c2s: Vec<u8>,    // Assembled data
 
     // Server to Client
-    pub next_seq_s2c: u32,
+    pub next_seq_s2c: Option<u32>,
     pub buffer_s2c: BTreeMap<u32, Vec<u8>>,
     pub assembled_s2c: Vec<u8>,
 }
@@ -39,12 +39,12 @@ pub struct TcpReassemblyTable {
 }
 
 impl ConnectionState {
-    pub fn new(initial_seq_c2s: u32, initial_seq_s2c: u32) -> Self {
+    pub fn new() -> Self {
         return ConnectionState {
-            next_seq_c2s: initial_seq_c2s,
+            next_seq_c2s: None,
             buffer_c2s: BTreeMap::new(),
             assembled_c2s: Vec::new(),
-            next_seq_s2c: initial_seq_s2c,
+            next_seq_s2c: None,
             buffer_s2c: BTreeMap::new(),
             assembled_s2c: Vec::new(),
         };
@@ -69,24 +69,35 @@ impl ConnectionState {
             )
         };
 
+        let payload_len = payload.len() as u32;
+
+        if next_seq.is_none() {
+            // First segment for this direction, initialize next_seq
+            *next_seq = Some(seq_num + payload_len);
+            assembled.extend_from_slice(payload);
+            return;
+        }
+
+        let expected = next_seq.unwrap();
+
         // NOTE: if data arrives in order
-        if *next_seq == seq_num {
+        if seq_num == expected {
             // Append current payload to assembled data
             assembled.extend_from_slice(payload);
 
             // Update next expected sequence number
-            *next_seq += payload.len() as u32;
+            *next_seq = Some(expected + payload_len);
 
             // Read and append any buffered segments that can now be assembled
             // (i.e., segments with sequence numbers equal to next_seq)
             // Segments are ordered in BTreeMap, so we can iterate in order
-            while let Some(segment) = buffer.remove(next_seq) {
+            while let Some(segment) = buffer.remove(&next_seq.unwrap()) {
                 assembled.extend_from_slice(&segment);
-                *next_seq += segment.len() as u32;
+                *next_seq = Some(next_seq.unwrap() + segment.len() as u32);
             }
         }
         // NOTE: if data arrives out of order (future segment)
-        else if seq_num > *next_seq {
+        else if seq_num > expected {
             // Insert if does not exist, and avoid overwriting existing segments
             buffer.entry(seq_num).or_insert_with(|| payload.to_vec());
         }

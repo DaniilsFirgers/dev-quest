@@ -22,47 +22,6 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         return;
     }
 
-    let src_port = u16::from_be_bytes([_data[0], _data[1]]);
-    let dst_port = u16::from_be_bytes([_data[2], _data[3]]);
-
-    if let Some(target) = &params.target_server {
-        let target_ip: Ipv4Addr = target.ip.parse().expect("Invalid target IP address");
-        // NOTE: we are only interested in the pakcets from server to client
-        if params.src_ip != target_ip || src_port != target.port {
-            return;
-        }
-    }
-
-    let from_client = match &params.target_server {
-        Some(server) => {
-            let server_ip: Ipv4Addr = server.ip.parse().expect("Invalid target IP address");
-            params.dst_ip == server_ip && dst_port == server.port
-        }
-        // TODO: replace by SYN-based detection
-        // SYN without ACK - client to server
-        // SYN with ACK - server to client
-        None => true,
-    };
-
-    let conn_key = build_consistent_conn_key(
-        params.src_ip,
-        params.dst_ip,
-        src_port,
-        dst_port,
-        from_client,
-    );
-
-    let seq_num = u32::from_be_bytes([_data[4], _data[5], _data[6], _data[7]]);
-
-    let conn_state = reassembly_table
-        .connections
-        .entry(conn_key.clone())
-        .or_insert_with(|| {
-            let initial_seq_c2s = if from_client { seq_num + 1 } else { 0 };
-            let initial_seq_s2c = if from_client { 0 } else { seq_num + 1 };
-            ConnectionState::new(initial_seq_c2s, initial_seq_s2c)
-        });
-
     // We look for 4 bits in the 13th byte (index 12) and then multiply by 4
     // because the data offset is given in 32-bit words
     let data_offset = (_data[12] >> 4) * 4; // in bytes
@@ -73,9 +32,76 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         return;
     }
 
+    let src_port = u16::from_be_bytes([_data[0], _data[1]]);
+    let dst_port = u16::from_be_bytes([_data[2], _data[3]]);
+
+    let flags = _data[13];
+    // TODO: cover bit masks
+    let syn = flags & 0x02 != 0;
+    let ack = flags & 0x10 != 0;
+    let fin = flags & 0x01 != 0;
+    let rst = flags & 0x04 != 0;
+
     let payload = &_data[data_offset as usize..];
+
+    let conn_key = build_consistent_conn_key(params.src_ip, params.dst_ip, src_port, dst_port);
+
+    let target_server = params.target_server.as_ref().map(|server| {
+        let target_ip: Ipv4Addr = server.ip.parse().expect("Invalid target IP address");
+        (target_ip, server.port)
+    });
+
+    if let Some((server_ip, server_port)) = target_server {
+        let involves_server = (params.src_ip == server_ip && src_port == server_port)
+            || (params.dst_ip == server_ip && dst_port == server_port);
+
+        if !involves_server {
+            return;
+        }
+    }
+
+    let from_client = if let Some((server_ip, server_port)) = target_server {
+        // Client → Server
+        params.dst_ip == server_ip && dst_port == server_port
+    } else if syn && !ack {
+        // SYN without ACK is likely from client to server
+        true
+    } else if syn && ack {
+        // SYN-ACK is from server to client
+        false
+    } else {
+        // Established connection, determine direction based on port numbers (heuristic)
+        true
+    };
+
+    let seq_num = u32::from_be_bytes([_data[4], _data[5], _data[6], _data[7]]);
+
+    let conn_state = reassembly_table
+        .connections
+        .entry(conn_key.clone())
+        .or_insert_with(|| ConnectionState::new());
+
+    // --- SYN handling (sequence init) ---
+    if syn {
+        let next_seq = if from_client {
+            &mut conn_state.next_seq_c2s
+        } else {
+            &mut conn_state.next_seq_s2c
+        };
+
+        if next_seq.is_none() {
+            *next_seq = Some(seq_num + 1); // SYN consumes 1
+        }
+    }
+
+    // -- Payload handling ---
     if !payload.is_empty() {
         conn_state.add_segment(seq_num, payload, from_client);
+    }
+
+    if fin || rst {
+        reassembly_table.connections.remove(&conn_key);
+        return;
     }
 
     let assembled_data = if from_client {
@@ -89,10 +115,9 @@ pub fn parse_tcp(_data: &[u8], params: TcpParserParams, reassembly_table: &mut T
         return;
     }
 
-    println!("Assembled TCP data length: {}", assembled_data.len());
     // TODO: take into accunt retransmissions and out-of-order segments
-    if !payload.is_empty() {
-        if let Ok(payload_str) = std::str::from_utf8(payload) {
+    if !assembled_data.is_empty() {
+        if let Ok(payload_str) = std::str::from_utf8(assembled_data) {
             println!("Reassembled TCP Payload:\n{}", payload_str);
         }
     }
@@ -113,9 +138,9 @@ fn build_consistent_conn_key(
     dst_ip: Ipv4Addr,
     src_port: u16,
     dst_port: u16,
-    from_client: bool,
 ) -> ConnectionKey {
-    if from_client {
+    // Lexicographically order endpoints to ensure same key both directions
+    if (src_ip, src_port) < (dst_ip, dst_port) {
         ConnectionKey {
             src_ip: IpAddr::V4(src_ip),
             dst_ip: IpAddr::V4(dst_ip),
