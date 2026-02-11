@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { authRouter } from "./auth/index.js";
+import { loadBalancingRouter } from "./auth/index.js";
 import { etagRouter } from "./etag/index.js";
 
 const apiRouter = Router();
 
-apiRouter.use("/auth", authRouter);
+apiRouter.use("/load-balancing", loadBalancingRouter);
 apiRouter.use("/etag", etagRouter);
 
 export default apiRouter;

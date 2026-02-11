@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
+import os from "os";
 
-export const authRouter = Router();
+export const loadBalancingRouter = Router();
 
-authRouter.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Auth route is working!" });
+loadBalancingRouter.get("/", (req: Request, res: Response) => {
+  res.json({ hostname: os.hostname() });
 });
