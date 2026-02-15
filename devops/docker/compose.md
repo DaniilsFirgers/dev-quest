@@ -54,7 +54,3 @@ secrets:
 ```
 
 - The secret is hold in `/run/secrets/<name_of_file>`.
-
-// Cover yaml anchors and aliases
-
-// Lifecycle hooks
