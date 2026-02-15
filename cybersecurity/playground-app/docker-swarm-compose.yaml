@@ -1,0 +1,29 @@
+services:
+  backend:
+    image: playground-app-backend:latest
+    networks:
+      - testnet
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 5s
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - target: 80
+        published: 8081
+        mode: ingress
+        protocol: tcp
+    networks:
+      - testnet
+
+networks:
+  testnet:
+    driver: overlay
+    driver_opts:
+      com.docker.network.driver.mtu: 1000
