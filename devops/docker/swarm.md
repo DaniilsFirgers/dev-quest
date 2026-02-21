@@ -89,6 +89,13 @@ The advantages of **ingress** are:
 
 4. Scheduler and placement decisions
 
+The **Docker Swarm Scheduler** is the component that decides: "Which node should run this task?". It runs in the Swarm **manager node** and reconciles desired and actual state.
+
+If multiple nodes qualify, Swarm prefers:
+
+- Nodes with fewer running tasks
+- Nodes that improve service distribution
+
 Next:
 
 6. Rolling Updates & Rollbacks
