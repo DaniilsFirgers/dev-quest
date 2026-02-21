@@ -4,9 +4,13 @@ services:
     networks:
       - testnet
     deploy:
-      replicas: 2
+      replicas: 5
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
       update_config:
         parallelism: 1
         delay: 5s
