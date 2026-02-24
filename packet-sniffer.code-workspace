@@ -12,6 +12,21 @@
     "rust-analyzer.cargo.allFeatures": true,
     "rust-analyzer.cargo.loadOutDirsFromCheck": true,
     "rust-analyzer.procMacro.enable": true,
-    "rust-analyzer.files.watcher": "server"
+    "rust-analyzer.files.watcher": "server",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "eslint.run": "onSave",
+    "eslint.validate": ["typescript"],
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "rbbit.typescript-hero",
+      "usernamehw.errorlens",
+      "eamodio.gitlens",
+      "ms-azuretools.vscode-docker",
+      "rust-lang.rust-analyzer"
+    ]
   }
 }
