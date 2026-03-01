@@ -4,7 +4,7 @@
       "path": "cybersecurity/networking/packet_sniffer"
     },
     {
-      "path": "cybersecurity/vulnerable-app"
+      "path": "cybersecurity/playground-app"
     }
   ],
   "settings": {
@@ -16,8 +16,10 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
     },
+    "editor.formatOnSave": false,
     "eslint.run": "onSave",
     "eslint.validate": ["typescript"],
+    "editor.defaultFormatter": null
   },
   "extensions": {
     "recommendations": [

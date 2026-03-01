@@ -4,7 +4,8 @@ import tsParser from "@typescript-eslint/parser";
 import importPlugin from "eslint-plugin-import";
 import unusedImports from "eslint-plugin-unused-imports";
 import security from "eslint-plugin-security";
-import node from "eslint-plugin-node";
+import eslintPluginPrettier from "eslint-plugin-prettier";
+import nodePlugin from "eslint-plugin-node";
 
 export default [
   {
@@ -20,7 +21,8 @@ export default [
       import: importPlugin,
       "unused-imports": unusedImports,
       security,
-      node,
+      prettier: eslintPluginPrettier,
+      node: nodePlugin,
     },
     settings: {
       "import/resolver": {
@@ -48,10 +50,22 @@ export default [
 
       // 📦 Import hygiene
       "import/no-unresolved": "error",
+
       // 🔐 Security plugin
       "security/detect-object-injection": "warn",
-      // 🚫 Node specific
-      "node/no-process-exit": "error",
+
+      // 🎨 Prettier as lint rule
+      "prettier/prettier": [
+        "error",
+        {
+          singleQuote: true,
+          semi: true,
+          printWidth: 100,
+          trailingComma: "all",
+          tabWidth: 2,
+          useTabs: false,
+        },
+      ],
     },
   },
 ];
