@@ -79,3 +79,50 @@ WHERE email LIKE '%.com';
 --- contains "ali"
 WHERE name LIKE '%ali%';
 ```
+
+3. Aggregation functions
+
+- To count rows use `COUNT(*)`:
+
+```
+SELECT COUNT(*) FROM users;
+```
+
+- To get average/sum/max of a column use `AVG/SUM/MAX(column_name)`:
+
+```
+SELECT AVG(total) FROM orders;
+
+SELECT SUM(total) FROM orders;
+
+SELECT MAX(total) FROM orders;
+
+```
+
+4. Grouping by
+
+```
+SELECT user_id, SUM(total)
+FROM orders
+GROUP BY user_id;
+```
+
+5. Aliases to make queries more readable
+
+```
+SELECT name as user_name
+FROM users;
+```
+
+OR
+
+```
+SELECT u.name
+FROM users u;
+```
+
+6. Distinct to remove duplicates
+
+7. Limit + offset (pagination)
+
+8. WHERE vs HAVING
