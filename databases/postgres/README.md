@@ -14,6 +14,14 @@
 10. `\i command_file` - executes a command file like init.sql;
 11. `\du` - lists all database users;
 
+## Order of command execution
+
+`SQL **does not execute queries in the order you write them.**`
+
+Approximate order of execution:
+
+1.
+
 ## Init scripts and Docker
 
 Initialization scripts can be either .sql or .sh and will run only once on the first start up of the container. If db was initialized they are ignored. Stored inside docker-entrypoint-initdb.d.
@@ -29,7 +37,7 @@ environment:
   POSTGRES_DB: your_database
 ```
 
-## SQL commands and stuff
+## SQL overview
 
 - ### Schema vs view vs database
 
@@ -77,7 +85,6 @@ environment:
   ```
 
   Overall INDEX suggestions:
-
   1. Use indexes for columsn that frequently use WHERE cluses, JOIN conditions,
      sorting (ORDER BY) and grouping (GROUP BY);
   2. For a B-TREE index generally requires 10-20% of the table's data size;
@@ -118,7 +125,6 @@ environment:
      ```
 
   6. Index maintenance
-
   - Use VACUUM to reclaim space occupied by 'dead tuples', which are created
     after rows deletion or updates and should be cleaned up (as data is marked
     as dead, not removed instantly);
