@@ -58,7 +58,7 @@ export default [
       "prettier/prettier": [
         "error",
         {
-          singleQuote: true,
+          singleQuote: false,
           semi: true,
           printWidth: 100,
           trailingComma: "all",
