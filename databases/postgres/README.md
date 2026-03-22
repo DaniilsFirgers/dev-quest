@@ -85,64 +85,9 @@ environment:
   ```
 
   Overall INDEX suggestions:
-  1. Use indexes for columsn that frequently use WHERE cluses, JOIN conditions,
-     sorting (ORDER BY) and grouping (GROUP BY);
+  1. Use indexes for columsn that frequently use WHERE cluses, JOIN conditions, sorting (ORDER BY) and grouping (GROUP BY);
   2. For a B-TREE index generally requires 10-20% of the table's data size;
-  3. Try not to use more than 10 indexes as write operation will take significatly
-     longer.
+  3. Try not to use more than 10 indexes as write operation will taks significatly longer.
   4. DO NOT index highly volatile columns like timestamps;
-  5. Monitor unused indexes with:
-
-     ```
-      SELECT
-          schemaname,
-          relname AS table_name,
-          indexrelname AS index_name,
-          idx_scan,
-          pg_size_pretty(pg_relation_size(indexrelid)) AS index_size
-      FROM
-          pg_stat_user_indexes
-      JOIN
-          pg_index
-          ON pg_stat_user_indexes.indexrelid = pg_index.indexrelid
-      WHERE
-          idx_scan = 0 -- No scans
-          AND NOT indisunique; -- Exclude unique indexes
-     ```
-
-     And index sizes with:
-
-     ```
-      SELECT
-          schemaname,
-          relname AS table_name,
-          indexrelname AS index_name,
-          pg_size_pretty(pg_relation_size(indexrelid)) AS index_size
-      FROM
-          pg_stat_user_indexes
-      ORDER BY
-          pg_relation_size(indexrelid) DESC;
-     ```
-
-  6. Index maintenance
-  - Use VACUUM to reclaim space occupied by 'dead tuples', which are created
-    after rows deletion or updates and should be cleaned up (as data is marked
-    as dead, not removed instantly);
-
-    _Clean up dead tupels and recover space without a lock_
-
-    ```
-    VACUUM
-    ```
-
-    _Reclaim all space, but with a table lock:_
-
-    ```
-    VACUUM FULL
-    ```
-
-    _Remove dead space and get statistics in one go_
-
-    ```
-    VACUUM ANALYZE
-    ```
+  5. Monitor unused indexes with;
+  6. Index maintenance;
