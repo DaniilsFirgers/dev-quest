@@ -112,12 +112,12 @@
    FROM users;
    ```
 
-OR
+   OR
 
-    ```
-    SELECT u.name
-    FROM users u;
-    ```
+   ```
+   SELECT u.name
+   FROM users u;
+   ```
 
 6. Distinct to remove duplicates
 
@@ -133,13 +133,11 @@ Both are used to filter data, but operate at **different stages of a query** and
 2. Applied **before** `GROUP BY`
 3. Cannot use aggregate functions (like `SUM`, `COUNT`, etc.)
 
-```
-
-SELECT \*
-FROM orders
-WHERE price > 100;
-
-```
+   ```
+   SELECT \*
+   FROM orders
+   WHERE price > 100;
+   ```
 
 👉 This returns rows where `price > 100`.
 
