@@ -158,6 +158,38 @@ Removes **duplicate rows** from the result set. Works on **one column** or **mul
 
 7. `LIMIT` + `OFFSET` for pagination
 
+`LIMIT` and `OFFSET` are super handy when you want to **control how many rows SQL returns** like for pagination or previews.
+
+- `OFFSET` skips a number of rows before returning reuslts.
+
+  ```
+  SELECT *
+  FROM orders
+  ORDER BY amount DESC
+  OFFSET 5;
+  ```
+
+  🤖 Skips the first **5 rows** and returns the rest.
+
+- Combination of `LIMIT` + `OFFSET`
+
+  ```
+  SELECT *
+  FROM orders
+  ORDER BY amount DESC
+  LIMIT 5 OFFSET 5;
+  ```
+
+  🤖 Skip **first 5 rows**, then take **next 5 rows**
+
+  It is useful for pagination:
+
+  | Page | OFFSET | LIMIT |
+  | ---- | ------ | ----- |
+  | 1    | 0      | 10    |
+  | 2    | 10     | 10    |
+  | 3    | 20     | 10    |
+
 8. `WHERE` vs `HAVING`
 
 Both are used to filter data, but operate at **different stages of a query** and are used for different purposes.
