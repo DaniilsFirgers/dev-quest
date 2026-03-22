@@ -99,11 +99,15 @@
 
 4. Grouping by with `GROUP_BY`
 
-   ```
-   SELECT user_id, SUM(total)
-   FROM orders
-   GROUP BY user_id;
-   ```
+- Group by **one column**:
+
+  ```
+  SELECT user_id, SUM(total)
+  FROM orders
+  GROUP BY user_id;
+  ```
+
+- Group by **multiple columns**:
 
 5. `AS` alias to make queries more readable
 
@@ -119,9 +123,40 @@
    FROM users u;
    ```
 
-6. Distinct to remove duplicates
+6. `DISTINCT` to remove duplicates
 
-7. Limit + offset (pagination)
+Removes **duplicate rows** from the result set. Works on **one column** or **multiple columns**.
+
+- Single column
+
+  ```
+  SELECT DISTINCT user_id
+  FROM orders;
+  ```
+
+  ⚡ Returns each `user_id` **once** - **list of customers who made orders**.
+
+- Multiple columns
+
+  ```
+  SELECT DISTINCT user_id, product_id
+  FROM orders;
+  ```
+
+  ⚡ Returns each unique **user-product pair**.
+
+- With aggregate functions
+
+  ```
+  SELECT COUNT(DISTINCT user_id) AS unique_customers
+  FROM orders;
+  ```
+
+  ⚡ Counts how many **unique customers** exist.
+
+💡 **Pro tip**: Use `DISTINCT` when you need **uniqeness**, and `GROUP BY` when you need **aggregates per group**.
+
+7. `LIMIT` + `OFFSET` for pagination
 
 8. `WHERE` vs `HAVING`
 
@@ -148,9 +183,9 @@ Both are used to filter data, but operate at **different stages of a query** and
 3. Can use **aggregate functions**
 
    ```
-   SELECT customer*id, COUNT(*) AS total*orders
+   SELECT customer_id, COUNT(*) AS total_orders
    FROM orders
-   GROUP_BY customer_id
+   GROUP BY customer_id
    HAVING COUNT(*) > 5;
    ```
 
@@ -162,7 +197,7 @@ Both are used to filter data, but operate at **different stages of a query** and
   SELECT customer_id, SUM(price) as total_spent
   FROM orders
   WHERE price > 50
-  GROUP_BY customer_id
+  GROUP BY customer_id
   HAVING SUM(price) > 500;
   ```
 
