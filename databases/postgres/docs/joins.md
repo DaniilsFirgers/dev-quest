@@ -79,3 +79,31 @@ TOP cases:
     ```
 
 🔥 Right join is mostly avoided by developers in favour of left join (swap tables to get the right join)
+
+4. `FULL JOIN`
+
+Is the 'complete' join type and is very useful in some real-world data quality / reconciliation tasks.
+
+`FULL JOIN = LEFT JOIN + RIGHT JOIN combined`
+
+```
+SELECT u.name, o.amount
+FROM users u
+FULL JOIN orders o
+ON u.id = o.user_id;
+```
+
+Use cases:
+
+1. Data comparison / reconciliation
+
+```
+SELECT old.id, new.id
+FROM payments_old old
+FULL JOIN payments_new new
+ON old.id = new.id
+WHERE old.id IS NULL OR new.id IS NULL;
+```
+
+2. Detect missing relationships on both sides
+   Example: find users without orders AND orders without users
